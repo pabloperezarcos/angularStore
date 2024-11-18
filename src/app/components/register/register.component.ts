@@ -41,8 +41,7 @@ export class RegisterComponent {
 
   /**
    * Constructor que inyecta los servicios de autenticación y enrutamiento.
-   * @param authService Servicio de autenticación para gestionar el registro de usuarios.
-   * @param router Servicio de enrutamiento para navegar entre vistas.
+     * @param router Servicio de enrutamiento para navegar entre vistas.
    */
   constructor(private router: Router) { }
 

@@ -1,0 +1,27 @@
+<!-- src/app/components/home/home.component.html -->
+<!-- Sección principal 'Hero Section' con imagen destacada y llamado a la acción -->
+<div class="jumbotron text-center">
+    <img src="assets/logo.png" alt="AngularStore" class="hero-logo">
+    <h1 class="display-4">Bienvenidos a AngularStore</h1>
+    <p class="lead">Los mejores cursos al mejor precio.</p>
+    <hr class="my-4">
+    <p>Explora nuestras ofertas y cursos actualizados.</p>
+    <a class="btn btn-primary btn-lg pulse-on-hover" href="/catalogo" role="button">Ver Todos los cursos</a>
+</div>
+<br>
+<div *ngIf="loading">Cargando cursos...</div>
+<div class="container" *ngIf="!loading">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4" *ngFor="let product of productos">
+            <div class="card lift-on-hover">
+                <img [src]="product.imagen" class="card-img-top" alt="{{product.nombre}}">
+                <div class="card-body">
+                    <h5 class="card-title">{{product.nombre}}</h5>
+                    <p class="card-text">{{product.descripcion}}</p>
+                    <p class="price">{{ product.precio | currency:'CLP':'symbol-narrow':'1.0-0':'es-CL' }} / 1 kilo</p>
+                    <a [routerLink]="['/producto', product.sku]" class="btn btn-primary">Ver Producto</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

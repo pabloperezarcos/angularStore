@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+        <!-- <img src="assets/logo.png" alt="Logo AngularStore" class="rotate-on-hover"
+            style="height: 40px; margin-right: 10px;"> -->
+        AngularStore
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="/catalogo">CATÁLOGO</a>
+            </li>
+        </ul>
+        <form class="form-inline" (ngSubmit)="onSearch()">
+            <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar"
+                [(ngModel)]="searchQuery" name="search">
+        </form>
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li *ngIf="isLoggedIn" class="nav-item">
+                <a class="nav-link" href="/mi-perfil">Mi Perfil</a>
+            </li>
+            <li *ngIf="isLoggedIn && isAdmin" class="nav-item">
+                <a class="nav-link" href="/admin/usuarios">Administrar usuarios</a>
+            </li>
+            <li *ngIf="isLoggedIn && isAdmin" class="nav-item">
+                <a class="nav-link" href="/admin/productos">Administrar productos</a>
+            </li>
+            <li *ngIf="isLoggedIn" class="nav-item">
+                <a class="nav-link" href="#" (click)="logout()">Cerrar sesión</a>
+            </li>
+            <li *ngIf="!isLoggedIn" class="nav-item">
+                <a class="nav-link" href="/login">Iniciar sesión</a>
+            </li>
+            <li *ngIf="!isLoggedIn" class="nav-item">
+                <a class="nav-link" href="/register">Registrarse</a>
+            </li>
+            <li class="nav-item position-relative cart-icon">
+                <a class="nav-item" href="/carrito">
+                    <img src="assets/carrito.png" alt="Carrito" class="cart-img">
+                    <span *ngIf="cartItemCount > 0" class="badge badge-pill badge-danger cart-badge">
+                        {{ cartItemCount }}
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
