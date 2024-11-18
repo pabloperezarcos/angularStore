@@ -1,0 +1,29 @@
+[
+    {
+        "id": 1,
+        "nombre": "Libro de Java Avanzado",
+        "descripcion": "Libro completo de Java para desarrollo FullStack III",
+        "precio": 75990,
+        "stock": 50,
+        "imagen": "assets/images/libro-java-avanzado.png",
+        "sku": "JAVA-001"
+    },
+    {
+        "id": 2,
+        "nombre": "Libro de Spring Boot",
+        "descripcion": "Libro esencial para desarrollar aplicaciones con Spring Boot en FullStack III",
+        "precio": 49990,
+        "stock": 100,
+        "imagen": "assets/images/libro-spring-boot.png",
+        "sku": "SPRING-001"
+    },
+    {
+        "id": 3,
+        "nombre": "Suscripción Mensual a Plataforma Online",
+        "descripcion": "Acceso ilimitado a recursos y tutoriales de FullStack III",
+        "precio": 13990,
+        "stock": 99999,
+        "imagen": "assets/images/suscripcion-plataforma.png",
+        "sku": "SUB-001"
+    }
+]

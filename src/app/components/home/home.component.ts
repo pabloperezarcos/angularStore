@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgIf, NgFor, CurrencyPipe } from '@angular/common';
 import { ProductService } from '../../services/product.service';
-import { Product } from '../../models/product.model';
+import { Product } from '../../models/producto.model';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 

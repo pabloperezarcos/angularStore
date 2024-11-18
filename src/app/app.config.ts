@@ -1,10 +1,32 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+/**
+ * Configuración de la aplicación Angular.
+ */
+import { ApplicationConfig, importProvidersFrom, LOCALE_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
+import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { registerLocaleData } from '@angular/common';
+import localeEsCL from '@angular/common/locales/es-CL';
 
-import { provideClientHydration } from '@angular/platform-browser';
+// Registrar el locale para español de Chile
+registerLocaleData(localeEsCL);
 
+/**
+ * Configuración de la aplicación Angular, incluyendo proveedores de servicios.
+ */
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration()]
+  providers: [
+    // Proveedor para configurar las rutas de la aplicación
+    provideRouter(routes),
+
+    // Proveedor para configurar el cliente HTTP con Fetch y interceptores
+    provideHttpClient(withFetch(), withInterceptorsFromDi()),
+
+    // Importar proveedores desde FormsModule para su uso en la aplicación
+    importProvidersFrom(FormsModule),
+
+    // Proveedor para configurar el LOCALE_ID con 'es-CL' (español de Chile)
+    { provide: LOCALE_ID, useValue: 'es-CL' }
+  ]
 };
