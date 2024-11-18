@@ -10,11 +10,17 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  email: string = '';
+  /** Nombre de usuario ingresado */
+  username: string = '';
+
+  /** Contraseña ingresada */
   password: string = '';
 
-  onSubmit() {
+  /** Mensaje de error para mostrar en caso de fallo en el inicio de sesión */
+  errorMessage: string = '';
+
+  onLogin() {
     // Lógica para autenticar al usuario
-    console.log('Usuario autenticado:', this.email);
+    console.log('Usuario autenticado:', this.username);
   }
 }
