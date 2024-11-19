@@ -25,5 +25,68 @@
         "stock": 99999,
         "imagen": "assets/images/suscripcion-plataforma.png",
         "sku": "SUB-001"
+    },
+    {
+        "id": 4,
+        "nombre": "Libro de Angular",
+        "descripcion": "Aprende Angular desde cero hasta nivel avanzado con este libro.",
+        "precio": 45990,
+        "stock": 75,
+        "imagen": "assets/images/libro-angular.png",
+        "sku": "ANG-001"
+    },
+    {
+        "id": 5,
+        "nombre": "Curso en Línea de TypeScript",
+        "descripcion": "Curso completo para dominar TypeScript y sus aplicaciones.",
+        "precio": 19990,
+        "stock": 200,
+        "imagen": "assets/images/curso-typescript.png",
+        "sku": "TS-001"
+    },
+    {
+        "id": 6,
+        "nombre": "Taller Práctico de Node.js",
+        "descripcion": "Taller intensivo para aprender Node.js con ejercicios prácticos.",
+        "precio": 29990,
+        "stock": 50,
+        "imagen": "assets/images/taller-nodejs.png",
+        "sku": "NODE-001"
+    },
+    {
+        "id": 7,
+        "nombre": "Libro de React.js",
+        "descripcion": "Guía completa para aprender y dominar React.js.",
+        "precio": 39990,
+        "stock": 80,
+        "imagen": "assets/images/libro-react.png",
+        "sku": "REACT-001"
+    },
+    {
+        "id": 8,
+        "nombre": "Libro de Bases de Datos",
+        "descripcion": "Todo lo que necesitas saber sobre bases de datos SQL y NoSQL.",
+        "precio": 55990,
+        "stock": 60,
+        "imagen": "assets/images/libro-bases-datos.png",
+        "sku": "DB-001"
+    },
+    {
+        "id": 9,
+        "nombre": "Curso Avanzado de Docker",
+        "descripcion": "Curso en línea para aprender Docker y contenedores desde cero.",
+        "precio": 34990,
+        "stock": 150,
+        "imagen": "assets/images/curso-docker.png",
+        "sku": "DOCKER-001"
+    },
+    {
+        "id": 10,
+        "nombre": "Kit de Desarrollo FullStack",
+        "descripcion": "Incluye recursos y herramientas esenciales para desarrolladores FullStack.",
+        "precio": 89990,
+        "stock": 30,
+        "imagen": "assets/images/kit-fullstack.png",
+        "sku": "FULLSTACK-001"
     }
 ]
