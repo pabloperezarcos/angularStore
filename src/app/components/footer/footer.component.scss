@@ -1,0 +1,47 @@
+/* footer.component.scss */
+.footer {
+    background-color: #333;
+    color: white;
+    padding: 2rem 0;
+    text-align: center;
+
+    h5 {
+        color: #800000;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        margin: 0;
+        color: #ccc; // Un tono más claro para el texto general
+    }
+}
+
+.footer-logo {
+    height: 100px;
+    /* Aumentamos el tamaño del logo */
+    transition: transform 0.5s ease-in-out;
+}
+
+.footer-logo.rotate-on-hover:hover {
+    transform: rotate(360deg);
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 2rem 0;
+    text-align: center;
+}
+
+footer h5,
+footer p {
+    color: #800000;
+}
+
+footer h5 {
+    margin-bottom: 1rem;
+}
+
+footer p {
+    margin: 0;
+}

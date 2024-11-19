@@ -1,0 +1,119 @@
+/* Badge Styles */
+.badge-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: rotate(45deg);
+    overflow: hidden;
+    width: 100px;
+    height: 100px;
+    pointer-events: none;
+}
+
+.badge {
+    display: block;
+    width: 100%;
+    text-align: center;
+    line-height: 30px;
+    font-size: 14px;
+    color: white;
+    font-weight: bold;
+    padding: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.badge-sale {
+    background: #ff6b6b;
+    /* Color para OFERTA */
+}
+
+.badge-soldout {
+    background: #333;
+    /* Color para AGOTADO */
+}
+
+.price-tag {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #800000;
+    /* Rojo claro */
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.price-tag span {
+    color: white;
+    /* Color oscuro para mejor legibilidad */
+}
+
+/* Productos Relacionados */
+#related-products-carousel .card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#related-products-carousel .card img {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#related-products-carousel .card-title {
+    font-size: 1.25rem;
+    color: #333;
+}
+
+#related-products-carousel .card-text {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* Flechas del carrusel */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #800000;
+    /* Burdeos */
+    width: 50px;
+    /* Ajusta el tamaño según sea necesario */
+    height: 50px;
+    /* Ajusta el tamaño según sea necesario */
+    border-radius: 50%;
+    background-size: 100%, 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-control-prev-icon::after,
+.carousel-control-next-icon::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+}
+
+.carousel-control-prev-icon::after {
+    transform: rotate(135deg);
+}
+
+.carousel-control-next-icon::after {
+    transform: rotate(-45deg);
+}
+
+/* catalogo.component.scss */
+.container {
+    margin-top: 2rem;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}

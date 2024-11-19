@@ -1,0 +1,58 @@
+/* home.component.scss */
+.jumbotron {
+    background: url('/assets/presentacion.jpg') no-repeat center center;
+    background-size: cover;
+    color: white;
+    padding: 6rem 2rem;
+    text-align: center;
+    position: relative;
+    margin-top: 2px;
+    margin-bottom: 0;
+}
+
+.jumbotron::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.jumbotron h1,
+.jumbotron p {
+    position: relative;
+    z-index: 1;
+    color: white;
+}
+
+.jumbotron .btn-primary {
+    background-color: #800000;
+    border: none;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-logo {
+    height: 350px;
+    margin-bottom: 20px;
+    z-index: 1;
+    position: relative;
+}
+
+.card {
+    .card-img-top {
+        object-fit: cover;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        color: #555;
+    }
+}

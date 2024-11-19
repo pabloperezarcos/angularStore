@@ -1,0 +1,86 @@
+/* Definir variables */
+$primary-color: #800000;
+$background-color: #fff;
+
+.navbar {
+    background-color: $background-color;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    border-bottom: 2px solid $primary-color;
+    margin-bottom: 0;
+    padding: 0 1rem;
+
+    .navbar-brand,
+    .nav-link {
+        color: $primary-color !important;
+        font-weight: bold;
+    }
+
+    .navbar-toggler-icon {
+        color: $primary-color;
+    }
+
+    .rotate-on-hover {
+        transition: transform 0.5s ease;
+
+        &:hover {
+            transform: rotate(360deg);
+        }
+    }
+
+    .form-inline {
+        margin-right: 1rem;
+
+        .form-control {
+            border-radius: 20px;
+            margin-right: 0.5rem;
+        }
+
+        .btn {
+            border-radius: 20px;
+            color: $primary-color;
+            border-color: $primary-color;
+
+            &:hover {
+                background-color: $primary-color;
+                color: white;
+            }
+        }
+    }
+
+    .navbar-nav {
+        .nav-item {
+            margin-left: 1rem;
+
+            .nav-link {
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    .cart-icon {
+        .cart-img {
+            height: 30px;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -15px;
+            font-size: 1rem;
+            /* Tamaño más grande para el número */
+            background-color: #800000;
+            /* Color de fondo del badge */
+            color: white;
+            /* Color del texto del badge */
+            border-radius: 50%;
+            padding: 0.3rem 0.6rem;
+            /* Padding para que se vea más grande */
+        }
+    }
+}
