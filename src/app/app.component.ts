@@ -3,6 +3,10 @@ import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from "./components/navbar/navbar.component";
 import { FooterComponent } from "./components/footer/footer.component";
 
+/**
+ * AppComponent es el componente raíz de la aplicación.
+ * Incluye la barra de navegación, el pie de página y un RouterOutlet para cargar los componentes de ruta.
+ */
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -10,6 +14,4 @@ import { FooterComponent } from "./components/footer/footer.component";
   styleUrl: './app.component.scss',
   imports: [RouterOutlet, NavbarComponent, FooterComponent]
 })
-export class AppComponent {
-  title = 'Angular Store FS3';
-}
+export class AppComponent { }
