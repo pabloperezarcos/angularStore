@@ -6,6 +6,7 @@ import { PerfilComponent } from './components/perfil/perfil.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { CatalogoComponent } from './components/catalogo/catalogo.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
+import { CarritoComponent } from './components/carrito/carrito.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -14,5 +15,6 @@ export const routes: Routes = [
   { path: 'perfil', component: PerfilComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'catalogo', component: CatalogoComponent },
-  { path: 'producto/:sku', component: ProductDetailComponent},
+  { path: 'producto/:sku', component: ProductDetailComponent },
+  { path: 'carrito', component: CarritoComponent }
 ];

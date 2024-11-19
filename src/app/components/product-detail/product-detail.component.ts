@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, RouterModule } from '@angular/router';
-//import { CarritoService } from '../../services/carrito.service';
+import { CarritoService } from '../../services/carrito.service';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/producto.model';
 import { CommonModule, CurrencyPipe } from '@angular/common';
@@ -40,7 +40,7 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    //private carritoService: CarritoService
+    private carritoService: CarritoService
   ) { }
 
   /**
@@ -76,8 +76,9 @@ export class ProductDetailComponent implements OnInit {
    */
   addToCarrito(): void {
     if (this.product) {
-      //this.carritoService.addToCarrito(this.product, this.quantity);
+      this.carritoService.addToCarrito(this.product, this.quantity);
       alert('Producto agregado al carrito');
     }
   }
+
 }
