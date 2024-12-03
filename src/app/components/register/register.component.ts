@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 /**
  * RegisterComponent maneja la lógica y la interfaz para el registro de nuevos usuarios.
@@ -41,9 +42,10 @@ export class RegisterComponent {
 
   /**
    * Constructor que inyecta los servicios de autenticación y enrutamiento.
-     * @param router Servicio de enrutamiento para navegar entre vistas.
+   * @param authService Servicio de autenticación para gestionar el registro de usuarios.
+   * @param router Servicio de enrutamiento para navegar entre vistas.
    */
-  constructor(private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   /**
    * Maneja el proceso de registro utilizando el servicio de autenticación.
@@ -61,6 +63,8 @@ export class RegisterComponent {
       rol: 'cliente',
       imagen: '/assets/default-profile.png'
     };
+
+    this.authService.addUser(newUser);
     this.router.navigate(['/login']);
   }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgIf, NgFor, CurrencyPipe } from '@angular/common';
 import { ProductService } from '../../services/product.service';
-import { Product } from '../../models/producto.model';
+import { Producto } from '../../models/producto.model';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
@@ -17,7 +17,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class HomeComponent implements OnInit {
   /** Lista de productos */
-  productos: Product[] = [];
+  productos: Producto[] = [];
 
   /** Indicador de carga */
   loading = true;
@@ -36,7 +36,6 @@ export class HomeComponent implements OnInit {
     this.loadProductosFromJson(); // Cambiado para cargar productos desde JSON
   }
 
-
   /**
    * Carga la lista de productos desde el JSON.
    */
@@ -54,6 +53,5 @@ export class HomeComponent implements OnInit {
       complete: () => console.log('Carga de productos completa')
     });
   }
-
 
 }

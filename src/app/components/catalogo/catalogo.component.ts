@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe, NgFor } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Product } from '../../models/producto.model';
+import { Producto } from '../../models/producto.model';
 import { ProductService } from '../../services/product.service';
 
 /**
@@ -17,7 +17,7 @@ import { ProductService } from '../../services/product.service';
 })
 export class CatalogoComponent implements OnInit {
   /** Lista de productos */
-  productos: Product[] = [];
+  productos: Producto[] = [];
 
   /** Indicador de carga */
   loading = true;

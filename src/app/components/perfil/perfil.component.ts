@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -56,13 +57,13 @@ export class PerfilComponent implements OnInit {
    * Constructor que inyecta el servicio de autenticación para obtener y actualizar el perfil de usuario.
    * @param authService Servicio de autenticación para gestionar el perfil de usuario.
    */
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   /**
    * Inicializa el componente obteniendo el usuario actual desde el servicio de autenticación.
    */
   ngOnInit(): void {
-
+    this.user = this.authService.getCurrentUser();
   }
 
   /**
@@ -78,7 +79,7 @@ export class PerfilComponent implements OnInit {
    */
   saveProfile(): void {
     if (this.user) {
-      //this.authService.updateUserProfile(this.user);
+      this.authService.updateUserProfile(this.user);
       this.editMode = false;
     }
   }

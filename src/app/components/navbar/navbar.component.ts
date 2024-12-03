@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-//import { CarritoService } from '../../services/carrito.service';
-//import { AuthService } from '../../services/auth.service';
+import { CarritoService } from '../../services/carrito.service';
+import { AuthService } from '../../services/auth.service';
 
 /**
  * NavbarComponent maneja la barra de navegación del sitio, incluyendo la búsqueda, el acceso al carrito y la gestión de la sesión de usuario.
@@ -38,13 +38,12 @@ export class NavbarComponent implements OnInit {
    * @param carritoService Servicio para gestionar el carrito de compras.
    * @param authService Servicio para gestionar la autenticación de usuarios.
    */
-  /*   constructor(private router: Router, private carritoService: CarritoService, private authService: AuthService) { } */
-  constructor() { }
+  constructor(private router: Router, private carritoService: CarritoService, private authService: AuthService) { }
 
   /**
    * Inicializa el componente suscribiéndose a los observables de autenticación y actualizaciones del carrito.
    */
-  /* ngOnInit(): void {
+  ngOnInit(): void {
     this.authService.isAuthenticated$.subscribe(isAuthenticated => {
       this.isLoggedIn = isAuthenticated;
       this.isAdmin = this.authService.getCurrentUser()?.rol === 'admin';
@@ -56,10 +55,6 @@ export class NavbarComponent implements OnInit {
     this.carritoService.carritoActualizado.subscribe(() => {
       this.cartItemCount = this.carritoService.getItemCount();
     });
-  } */
-
-  ngOnInit() {
-
   }
 
   /**
@@ -67,7 +62,7 @@ export class NavbarComponent implements OnInit {
    */
   onSearch(): void {
     if (this.searchQuery) {
-      //this.router.navigate(['/search'], { queryParams: { query: this.searchQuery } });
+      this.router.navigate(['/search'], { queryParams: { query: this.searchQuery } });
     }
   }
 
@@ -75,7 +70,7 @@ export class NavbarComponent implements OnInit {
    * Cierra la sesión del usuario y redirige a la página principal.
    */
   logout(): void {
-    //this.authService.logout();
-    //this.router.navigate(['/']);
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
 }
