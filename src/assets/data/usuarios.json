@@ -1,0 +1,103 @@
+{
+    "usuarios": [
+        {
+            "id": 1,
+            "nombre": "Emanuel Silva",
+            "username": "emanuel_silva",
+            "email": "emanuel@gmail.com",
+            "password": "$Ema123$",
+            "birthdate": "1990-05-15",
+            "address": "Av. Siempre Viva 123, Santiago",
+            "rol": "cliente",
+            "imagen": "/assets/fotoperfil/emanuel.png"
+        },
+        {
+            "id": 2,
+            "nombre": "Pablo Perez",
+            "username": "pablo_perez",
+            "email": "pablo.perez@carnescdp.cl",
+            "password": "#Adm456#",
+            "birthdate": "1985-08-10",
+            "address": "Calle Falsa 456, Valparaíso",
+            "rol": "admin",
+            "imagen": "/assets/fotoperfil/pablo.png"            
+        },
+        {
+            "id": 3,
+            "nombre": "Martina López",
+            "username": "martina_lopez",
+            "email": "martina.lopez@gmail.com",
+            "password": "M4rt!na8",
+            "birthdate": "1992-12-01",
+            "address": "Calle Real 789, Concepción",
+            "rol": "cliente",
+            "imagen": "/assets/fotoperfil/martina.png"
+        },
+        {
+            "id": 4,
+            "nombre": "Sebastián Rojas",
+            "username": "sebastian_rojas",
+            "email": "sebastian.rojas@gmail.com",
+            "password": "Seb4$123",
+            "birthdate": "1993-11-21",
+            "address": "Avenida Principal 101, Temuco",
+            "rol": "cliente",
+            "imagen": "/assets/fotoperfil/sebastian.png"
+        },
+        {
+            "id": 5,
+            "nombre": "Isidora Gómez",
+            "username": "isidora_gomez",
+            "email": "isidora.gomez@gmail.com",
+            "password": "I$!dora9",
+            "birthdate": "1995-04-12",
+            "address": "Calle Secundaria 202, Antofagasta",
+            "rol": "cliente",
+            "imagen": "/assets/fotoperfil/isidora.png"
+        },
+        {
+            "id": 6,
+            "nombre": "Matías Torres",
+            "username": "matias_torres",
+            "email": "matias.torres@gmail.com",
+            "password": "Mati4s#7",
+            "birthdate": "1991-07-30",
+            "address": "Calle Tercera 303, La Serena",
+            "rol": "cliente",
+            "imagen": "/assets/fotoperfil/matias.png"
+        },
+        {
+            "id": 7,
+            "nombre": "Catalina Fernández",
+            "username": "catalina_fernandez",
+            "email": "catalina.fernandez@gmail.com",
+            "password": "C4tal!na",
+            "birthdate": "1994-03-25",
+            "address": "Avenida Cuarta 404, Iquique",
+            "rol": "cliente",
+            "imagen": "/assets/fotoperfil/catalina.png"
+        },
+        {
+            "id": 8,
+            "nombre": "Joaquín Castillo",
+            "username": "joaquin_castillo",
+            "email": "joaquin.castillo@gmail.com",
+            "password": "Joaq#123",
+            "birthdate": "1996-09-15",
+            "address": "Calle Quinta 505, Punta Arenas",
+            "rol": "cliente",
+            "imagen": "/assets/fotoperfil/joaquin.png"
+        },
+        {
+            "id": 9,
+            "nombre": "Vicente Martínez",
+            "username": "vicente_martinez",
+            "email": "vicente.martinez@carnescdp.cl",
+            "password": "V1cent#8",
+            "birthdate": "1989-02-18",
+            "address": "Avenida Séptima 707, Rancagua",
+            "rol": "admin",
+            "imagen": "/assets/fotoperfil/vicente.png"
+        }
+    ]
+}
