@@ -14,7 +14,7 @@
         "descripcion": "Libro esencial para desarrollar aplicaciones con Spring Boot en FullStack III",
         "precio": 49990,
         "stock": 100,
-        "imagen": "assets/images/libro-spring-boot.png",
+        "imagen": "assets/images/libro-springboot.png",
         "sku": "SPRING-001"
     },
     {
