@@ -1,4 +1,15 @@
 /* Badge Styles */
+.jumbotron {
+    background: url('/assets/presentacion.jpg') no-repeat center center;
+    background-size: cover;
+    color: white;
+    padding: 6rem 2rem;
+    text-align: center;
+    position: relative;
+    margin-top: 2px;
+    margin-bottom: 0;
+}
+
 .badge-overlay {
     position: absolute;
     top: 0;
