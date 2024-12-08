@@ -43,10 +43,10 @@ export class AdminProductosComponent implements OnInit {
    * Carga los productos desde el servicio ProductService utilizando Firestore.
    */
   loadProductos(): void {
-    this.productService.getProductsFromJson.subscribe(data => {
+/*     this.productService.getProductsFromJson.subscribe(data => {
       this.productos = data;
       this.filteredProductos = data;
-    });
+    }); */
   }
 
   /**
@@ -88,7 +88,7 @@ export class AdminProductosComponent implements OnInit {
    * Guarda un producto editado o añadido.
    */
   saveProduct(): void {
-    if (this.isAdding) {
+  /*   if (this.isAdding) {
       this.productService.addProducto(this.selectedProduct!).subscribe(() => {
         this.loadProductos(); // Recarga la lista de productos después de añadir uno nuevo
       });
@@ -97,7 +97,7 @@ export class AdminProductosComponent implements OnInit {
       this.productService.updateProducto(productId, this.selectedProduct!).subscribe(() => {
         this.loadProductos(); // Recarga la lista de productos después de actualizar uno existente
       });
-    }
+    } */
     this.cancelEdit(); // Finaliza el modo de edición
   }
 
@@ -106,10 +106,10 @@ export class AdminProductosComponent implements OnInit {
    * @param product Producto a eliminar.
    */
   deleteProduct(product: Producto): void {
-    const productId = product.id!;
+/*     const productId = product.id!;
     this.productService.deleteProducto(productId).subscribe(() => {
       this.loadProductos(); // Recarga la lista de productos después de eliminar uno
-    });
+    }); */
   }
 
   /**
