@@ -1,45 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { UsuarioService } from '../../services/usuario.service';
+import { Usuario } from '../../models/usuario.model';
 
-/**
- * Representa un usuario en el sistema.
- */
-interface User {
-  /** Identificador único del usuario. */
-  id: number;
-
-  /** Nombre completo del usuario. */
-  nombre: string;
-
-  /** Nombre de usuario (username) del usuario. */
-  username: string;
-
-  /** Correo electrónico del usuario. */
-  email: string;
-
-  /** Contraseña del usuario. */
-  password: string;
-
-  /** Fecha de nacimiento del usuario. */
-  birthdate: string;
-
-  /** Dirección del usuario. */
-  address: string;
-
-  /** Rol del usuario en el sistema (e.g., administrador, cliente). */
-  rol: string;
-
-  /** URL de la imagen de perfil del usuario. */
-  imagen: string;
-}
-
-/**
- * AdminUsuariosComponent gestiona la administración de usuarios, permitiendo agregar, editar y eliminar usuarios.
- * Incluye funcionalidades de filtrado y selección de usuarios.
- */
 @Component({
   selector: 'app-admin-usuarios',
   standalone: true,
@@ -48,55 +12,43 @@ interface User {
   styleUrls: ['./admin-usuarios.component.scss']
 })
 export class AdminUsuariosComponent implements OnInit {
-  /** Lista de todos los usuarios */
-  usuarios: User[] = [];
-
-  /** Lista de usuarios filtrados */
-  filteredUsuarios: User[] = [];
-
-  /** Usuario seleccionado para editar */
-  selectedUser: User | null = null;
-
-  /** Indica si se está en modo edición */
+  usuarios: Usuario[] = [];
+  filteredUsuarios: Usuario[] = [];
+  selectedUser: Usuario | null = null;
   isEditing: boolean = false;
-
-  /** Indica si se está añadiendo un nuevo usuario */
   isAdding: boolean = false;
-
-  /** Consulta de búsqueda para filtrar usuarios */
   searchQuery: string = '';
-
-  /** Tipo de campo para la contraseña, para mostrar u ocultar */
   passwordFieldType: string = 'password';
+  loading: boolean = false;
 
-  /**
-   * Constructor que inyecta las dependencias necesarias para realizar solicitudes HTTP y servicios de autenticación.
-   * @param http Cliente HTTP para solicitudes a servicios externos.
-   * @param authService Servicio de autenticación para gestionar usuarios.
-   */
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private usuarioService: UsuarioService) { }
 
-  /**
-   * Se inicializa el componente cargando la lista de usuarios.
-   */
   ngOnInit(): void {
     this.loadUsuarios();
   }
 
   /**
-   * Carga los usuarios desde un archivo JSON externo y actualiza las listas de usuarios y usuarios filtrados.
-   * También obtiene todos los usuarios del servicio de autenticación.
+   * Carga los usuarios desde el backend.
    */
   loadUsuarios(): void {
-    this.http.get<{ usuarios: User[] }>('app/data/usuarios.json').subscribe(data => {
-/*       this.authService.setUsuarios(data.usuarios);
-      this.usuarios = this.authService.getAllUsers(); */
-      this.filteredUsuarios = [...this.usuarios];
+    this.loading = true;
+    this.usuarioService.getUsuarios().subscribe({
+      next: (data) => {
+        this.usuarios = data;
+        this.filteredUsuarios = [...this.usuarios];
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error cargando usuarios:', err);
+        this.loading = false;
+      }
     });
   }
 
+
+
   /**
-   * Filtra los usuarios basándose en el nombre, nombre de usuario o correo electrónico según la consulta de búsqueda.
+   * Filtra los usuarios según la búsqueda.
    */
   filterUsuarios(): void {
     if (this.searchQuery) {
@@ -111,41 +63,53 @@ export class AdminUsuariosComponent implements OnInit {
   }
 
   /**
-   * Selecciona un usuario para editar y ajusta los modos de edición y agregación.
-   * @param user Usuario a editar.
+   * Selecciona un usuario para edición.
+   * @param user Usuario seleccionado.
    */
-  selectUser(user: User): void {
+  selectUser(user: Usuario): void {
     this.selectedUser = { ...user };
     this.isEditing = true;
     this.isAdding = false;
   }
 
   /**
-   * Guarda los cambios realizados a un usuario existente o añade un nuevo usuario a la lista.
+   * Guarda el usuario editado o crea uno nuevo.
    */
   saveUser(): void {
-/*     if (this.isAdding) {
-      this.authService.addUser(this.selectedUser!);
-    } else {
-      this.authService.updateUserProfile(this.selectedUser!);
+    if (this.isAdding && this.selectedUser) {
+      this.usuarioService.crearUsuario(this.selectedUser).subscribe({
+        next: () => {
+          this.loadUsuarios();
+          this.cancelEdit();
+        },
+        error: (err) => console.error('Error creando usuario:', err)
+      });
+    } else if (this.selectedUser?.id !== undefined) {
+      this.usuarioService.actualizarUsuario(this.selectedUser.id, this.selectedUser).subscribe({
+        next: () => {
+          this.loadUsuarios();
+          this.cancelEdit();
+        },
+        error: (err) => console.error('Error actualizando usuario:', err)
+      });
     }
-    this.usuarios = this.authService.getAllUsers(); */
-    this.filteredUsuarios = [...this.usuarios];
-    this.cancelEdit();
   }
 
   /**
-   * Elimina un usuario de la lista.
+   * Elimina un usuario.
    * @param user Usuario a eliminar.
    */
-  deleteUser(user: User): void {
-/*     this.authService.deleteUser(user);
-    this.usuarios = this.authService.getAllUsers(); */
-    this.filteredUsuarios = [...this.usuarios];
+  deleteUser(user: Usuario): void {
+    if (user.id !== undefined) {
+      this.usuarioService.eliminarUsuario(user.id).subscribe({
+        next: () => this.loadUsuarios(),
+        error: (err) => console.error('Error eliminando usuario:', err)
+      });
+    }
   }
 
   /**
-   * Cancela el modo de edición o agregación y limpia el usuario seleccionado.
+   * Cancela el modo de edición/agregar.
    */
   cancelEdit(): void {
     this.selectedUser = null;
@@ -154,11 +118,11 @@ export class AdminUsuariosComponent implements OnInit {
   }
 
   /**
-   * Prepara un nuevo usuario para ser añadido a la lista y activa los modos de edición y agregación.
+   * Prepara un nuevo usuario para ser añadido.
    */
   addUser(): void {
     this.selectedUser = {
-      id: this.usuarios.length + 1,
+      id: 0,
       nombre: '',
       username: '',
       email: '',
@@ -173,7 +137,7 @@ export class AdminUsuariosComponent implements OnInit {
   }
 
   /**
-   * Alterna la visibilidad del campo de contraseña entre texto y contraseña.
+   * Alterna la visibilidad de la contraseña.
    */
   togglePasswordVisibility(): void {
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';

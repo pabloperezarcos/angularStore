@@ -82,6 +82,7 @@ export class AuthService {
   logout(): void {
     if (this.isBrowser()) {
       localStorage.removeItem(this.AUTH_KEY);
+      localStorage.removeItem('currentUser');
     }
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);

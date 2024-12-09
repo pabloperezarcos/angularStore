@@ -2,57 +2,44 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { UsuarioService } from '../../services/usuario.service';
+import { Usuario } from '../../models/usuario.model';
 
-/**
- * RegisterComponent maneja la lógica y la interfaz para el registro de nuevos usuarios.
- * Permite a los usuarios crear una nueva cuenta proporcionando su información personal.
- */
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule],
 })
 export class RegisterComponent {
-  /** Nombre del usuario. */
+  /** Datos del formulario */
   nombre: string = '';
-
-  /** Nombre de usuario. */
   username: string = '';
-
-  /** Correo electrónico del usuario. */
   email: string = '';
-
-  /** Contraseña del usuario. */
   password: string = '';
-
-  /** Fecha de nacimiento del usuario. */
   birthdate: string = '';
-
-  /** Dirección del usuario. */
   address: string = '';
 
-  /** Mensaje de error para mostrar en caso de fallo en el registro. */
+  /** Mensajes de feedback */
   errorMessage: string = '';
+  successMessage: string = '';
 
-  /** Indica si la contraseña debe ser visible. */
+  /** Indica si la contraseña debe ser visible */
   showPassword: boolean = false;
 
   /**
-   * Constructor que inyecta los servicios de autenticación y enrutamiento.
-   * @param authService Servicio de autenticación para gestionar el registro de usuarios.
+   * Constructor que inyecta el servicio de usuario y enrutamiento.
+   * @param usuarioService Servicio para gestionar usuarios.
    * @param router Servicio de enrutamiento para navegar entre vistas.
    */
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private usuarioService: UsuarioService, private router: Router) { }
 
   /**
-   * Maneja el proceso de registro utilizando el servicio de autenticación.
-   * Crea un nuevo usuario y redirige a la página de inicio de sesión.
+   * Maneja el registro de nuevos usuarios.
    */
   onRegister(): void {
-    const newUser = {
+    const newUser: Usuario = {
       id: 0,
       nombre: this.nombre,
       username: this.username,
@@ -60,23 +47,28 @@ export class RegisterComponent {
       password: this.password,
       birthdate: this.birthdate,
       address: this.address,
-      rol: 'cliente',
-      imagen: '/assets/default-profile.png'
+      rol: 'cliente', // Rol predeterminado
+      imagen: '/assets/default-profile.png',
     };
 
-    //this.authService.addUser(newUser);
-    this.router.navigate(['/login']);
+    this.usuarioService.crearUsuario(newUser).subscribe({
+      next: () => {
+        this.successMessage = 'Registro exitoso. Ahora puedes iniciar sesión.';
+        this.errorMessage = '';
+        setTimeout(() => this.router.navigate(['/login']), 2000); // Redirige tras 2 segundos
+      },
+      error: (err) => {
+        console.error('Error al registrar usuario:', err);
+        this.errorMessage = 'Hubo un problema al registrar. Por favor, inténtalo de nuevo.';
+        this.successMessage = '';
+      },
+    });
   }
 
   /**
-   * Alterna la visibilidad del campo de contraseña entre texto y contraseña.
-   * @param inputId ID del campo de entrada de contraseña.
+   * Alterna la visibilidad de la contraseña.
    */
-  togglePasswordVisibility(inputId: string): void {
-    const input = document.getElementById(inputId) as HTMLInputElement;
-    if (input) {
-      input.type = input.type === 'password' ? 'text' : 'password';
-      this.showPassword = !this.showPassword;
-    }
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 }

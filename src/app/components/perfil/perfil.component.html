@@ -9,7 +9,9 @@
                 <h4 class="card-title">{{ user.nombre }}</h4>
                 <p class="card-text"><strong>Nombre de usuario:</strong> {{ user.username }}</p>
                 <p class="card-text"><strong>Correo electrónico:</strong> {{ user.email }}</p>
-                <p class="card-text"><strong>Fecha de nacimiento:</strong> {{ user.birthdate }}</p>
+                <p class="card-text">
+                    <strong>Fecha de nacimiento:</strong> {{ getFormattedDate(user.birthdate) }}
+                </p>
                 <p class="card-text"><strong>Dirección:</strong> {{ user.address }}</p>
                 <button class="btn btn-primary" (click)="toggleEditMode()">Editar Perfil</button>
             </div>

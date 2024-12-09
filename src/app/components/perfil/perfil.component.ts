@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { UsuarioService } from '../../services/usuario.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -7,37 +8,19 @@ import { FormsModule } from '@angular/forms';
  * Representa un usuario en el sistema.
  */
 interface User {
-  /** Identificador único del usuario. */
   id: number;
-
-  /** Nombre completo del usuario. */
   nombre: string;
-
-  /** Nombre de usuario (username) del usuario. */
   username: string;
-
-  /** Correo electrónico del usuario. */
   email: string;
-
-  /** Contraseña del usuario. */
   password: string;
-
-  /** Fecha de nacimiento del usuario. */
   birthdate: string;
-
-  /** Dirección del usuario. */
   address: string;
-
-  /** Rol del usuario en el sistema (e.g., administrador, cliente). */
   rol: string;
-
-  /** URL de la imagen de perfil del usuario. */
   imagen: string;
 }
 
 /**
  * PerfilComponent maneja la visualización y edición del perfil de usuario.
- * Permite a los usuarios ver y actualizar su información de perfil.
  */
 @Component({
   selector: 'app-perfil',
@@ -53,17 +36,37 @@ export class PerfilComponent implements OnInit {
   /** Indica si el modo de edición está activado */
   editMode: boolean = false;
 
-  /**
-   * Constructor que inyecta el servicio de autenticación para obtener y actualizar el perfil de usuario.
-   * @param authService Servicio de autenticación para gestionar el perfil de usuario.
-   */
-  constructor(private authService: AuthService) { }
+  /** Indicador de carga */
+  loading: boolean = false;
 
   /**
-   * Inicializa el componente obteniendo el usuario actual desde el servicio de autenticación.
+   * Constructor que inyecta el servicio de autenticación y usuario.
+   * @param authService Servicio para gestionar la autenticación.
+   * @param usuarioService Servicio para gestionar las operaciones relacionadas con usuarios.
+   */
+  constructor(
+    private authService: AuthService,
+    private usuarioService: UsuarioService
+  ) { }
+
+  /**
+   * Inicializa el componente obteniendo el usuario actual.
    */
   ngOnInit(): void {
-    this.user = this.authService.getCurrentUser();
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.loading = true;
+      this.usuarioService.getUsuarioByUsername(currentUser.username).subscribe({
+        next: (user) => {
+          this.user = user;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error al obtener el perfil del usuario:', err);
+          this.loading = false;
+        }
+      });
+    }
   }
 
   /**
@@ -73,14 +76,29 @@ export class PerfilComponent implements OnInit {
     this.editMode = !this.editMode;
   }
 
+  getFormattedDate(dateString: string): string {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'long', year: 'numeric' };
+    return date.toLocaleDateString('es-CL', options);
+  }
+
+
   /**
-   * Guarda los cambios realizados en el perfil de usuario utilizando el servicio de autenticación.
-   * Desactiva el modo de edición después de guardar.
+   * Guarda los cambios realizados en el perfil de usuario.
    */
   saveProfile(): void {
     if (this.user) {
-      //this.authService.updateUserProfile(this.user);
-      this.editMode = false;
+      this.loading = true;
+      this.usuarioService.actualizarUsuario(this.user.id, this.user).subscribe({
+        next: () => {
+          this.editMode = false;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error al guardar el perfil:', err);
+          this.loading = false;
+        }
+      });
     }
   }
 }
