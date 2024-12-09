@@ -6,14 +6,13 @@ import { ProductService } from '../../services/product.service';
 
 /**
  * CatalogoComponent maneja la visualización del catálogo de productos.
- * Muestra una lista de productos obtenidos del servicio de productos.
  */
 @Component({
   selector: 'app-catalogo',
   standalone: true,
   imports: [NgFor, CommonModule, RouterModule, CurrencyPipe],
   templateUrl: './catalogo.component.html',
-  styleUrls: ['./catalogo.component.scss']
+  styleUrls: ['./catalogo.component.scss'],
 })
 export class CatalogoComponent implements OnInit {
   /** Lista de productos */
@@ -23,23 +22,22 @@ export class CatalogoComponent implements OnInit {
   loading = true;
 
   /**
-   * Constructor que inyecta el servicio de productos para obtener los datos de los productos.
-   * @param productService Servicio que proporciona operaciones relacionadas con los productos.
+   * Constructor que inyecta el servicio de productos.
    */
   constructor(private productService: ProductService) { }
 
   /**
-   * Inicializa el componente cargando la lista de productos.
+   * Inicializa el componente cargando los productos.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadProductos();
   }
 
   /**
-   * Carga la lista de productos desde el servicio.
+   * Carga los productos desde el servicio.
    */
   private loadProductos(): void {
-    this.productService.getProductsFromJson().subscribe({
+    this.productService.getProductos().subscribe({
       next: (data) => {
         console.log('Productos obtenidos:', data); // Log para depuración
         this.productos = data;
@@ -49,7 +47,7 @@ export class CatalogoComponent implements OnInit {
         console.error('Error obteniendo productos:', err);
         this.loading = false;
       },
-      complete: () => console.log('Carga de productos completa')
+      complete: () => console.log('Carga de productos completa'),
     });
   }
 }

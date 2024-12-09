@@ -79,7 +79,7 @@ export class PerfilComponent implements OnInit {
    */
   saveProfile(): void {
     if (this.user) {
-      this.authService.updateUserProfile(this.user);
+      //this.authService.updateUserProfile(this.user);
       this.editMode = false;
     }
   }

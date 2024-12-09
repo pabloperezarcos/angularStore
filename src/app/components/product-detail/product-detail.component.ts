@@ -7,34 +7,31 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { switchMap } from 'rxjs/operators';
 
-/**
- * ProductoDetailComponent maneja la visualización de los detalles de un productoo individual,
- * incluyendo productoos relacionados y la opción de agregar al carrito.
- */
 @Component({
   selector: 'app-producto-detail',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, CurrencyPipe],
   templateUrl: './product-detail.component.html',
-  styleUrls: ['./product-detail.component.scss']
+  styleUrls: ['./product-detail.component.scss'],
 })
 export class ProductDetailComponent implements OnInit {
-  /** Productoo actual */
+  /** Producto actual */
   producto: Producto | undefined;
 
-  /** Productoos relacionados */
+  /** Productos relacionados */
   relatedProductos: Producto[] = [];
 
   /** Indicador de carga */
   loading = true;
 
-  /** Cantidad del productoo a agregar al carrito */
+  /** Cantidad del producto a agregar al carrito */
   quantity: number = 1;
+  
 
   /**
-   * Constructor que inyecta las dependencias necesarias para obtener los detalles del productoo y manejar el carrito.
+   * Constructor que inyecta las dependencias necesarias para obtener los detalles del producto y manejar el carrito.
    * @param route Servicio para obtener información de la ruta activa.
-   * @param productoService Servicio para gestionar productoos.
+   * @param productService Servicio para gestionar productos.
    * @param carritoService Servicio para gestionar el carrito de compras.
    */
   constructor(
@@ -43,41 +40,58 @@ export class ProductDetailComponent implements OnInit {
     private carritoService: CarritoService
   ) { }
 
+  
+
   /**
-   * Inicializa el componente cargando el productoo y los productoos relacionados basados en el SKU de la ruta.
+   * Inicializa el componente cargando el producto y los productos relacionados.
    */
   ngOnInit() {
-    this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => {
-        const sku = params.get('sku');
-        this.loading = true;
-        return this.productService.getProductsFromJson(); // Cambiado para cargar productoos desde JSON
-      })
-    ).subscribe({
-      next: (data) => {
-        const sku = this.route.snapshot.paramMap.get('sku');
-        this.producto = data.find(p => p.sku === sku);
-        this.relatedProductos = data.filter(p => p.sku !== sku).slice(0, 3);
-        console.log('Productoo actual:', this.producto);
-        console.log('Productoos relacionados:', this.relatedProductos);
-        this.loading = false;
+    this.route.paramMap
+      .pipe(
+        switchMap((params: ParamMap) => {
+          const id = params.get('id'); // Cambiado a `id` en lugar de `sku`
+          this.loading = true;
+          return this.productService.getProductoById(Number(id));
+        })
+      )
+      .subscribe({
+        next: (producto) => {
+          this.producto = producto;
+          this.loadRelatedProductos(); // Cargar productos relacionados
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error al cargar el producto:', err);
+          this.loading = false;
+        },
+      });
+  }
+
+  /**
+   * Carga productos relacionados desde el backend.
+   */
+  loadRelatedProductos(): void {
+    this.productService.getProductos().subscribe({
+      next: (productos) => {
+        this.relatedProductos = productos
+          .filter((p) => p.id !== this.producto?.id) // Excluir el producto actual
+          .slice(0, 3); // Limitar a 3 productos
+        console.log('Productos relacionados:', this.relatedProductos);
       },
       error: (err) => {
-        console.error(err);
-        this.loading = false;
+        console.error('Error al cargar productos relacionados:', err);
       },
-      complete: () => console.log('Carga de productoo completa')
     });
   }
 
   /**
-   * Agrega el productoo actual al carrito de compras.
+   * Agrega el producto actual al carrito de compras.
    * Muestra una alerta al usuario confirmando la acción.
    */
   addToCarrito(): void {
     if (this.producto) {
       this.carritoService.addToCarrito(this.producto, this.quantity);
-      alert('Productoo agregado al carrito');
+      alert('Producto agregado al carrito');
     }
   }
 }

@@ -2,72 +2,56 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
-import { Producto} from '../../models/producto.model';
+import { Producto } from '../../models/producto.model';
 
-/**
- * Componente para la administración de productos.
- */
 @Component({
   selector: 'app-admin-productos',
-  standalone: true, // Indica que este componente no tiene dependencias específicas
-  imports: [CommonModule, FormsModule], // Módulos importados necesarios para el componente
-  templateUrl: './admin-productos.component.html', // Ruta al archivo HTML que define la estructura del componente
-  styleUrls: ['./admin-productos.component.scss'] // Rutas a los archivos de estilos SCSS aplicados al componente
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './admin-productos.component.html',
+  styleUrls: ['./admin-productos.component.scss']
 })
 export class AdminProductosComponent implements OnInit {
-  /** Array que contiene todos los productos. */
   productos: Producto[] = [];
-  /** Array de productos filtrados. */
   filteredProductos: Producto[] = [];
-  /** Producto seleccionado para edición o visualización. */
   selectedProduct: Producto | null = null;
-  /** Indica si se está editando un producto. */
   isEditing: boolean = false;
-  /** Indica si se está añadiendo un nuevo producto. */
   isAdding: boolean = false;
-  /** Consulta de búsqueda para filtrar productos. */
   searchQuery: string = '';
+  loading: boolean = false;
 
-  /** Servicio para manejar operaciones de productos. */
   private productService = inject(ProductService);
 
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Carga los productos utilizando datos desde un archivo JSON en lugar de Firestore.
-   */
   ngOnInit(): void {
-    this.loadProductosFromJson();
+    this.loadProductos();
   }
 
   /**
-   * Carga los productos desde el servicio ProductService utilizando Firestore.
+   * Carga los productos desde el backend y actualiza la lista.
    */
   loadProductos(): void {
-/*     this.productService.getProductsFromJson.subscribe(data => {
-      this.productos = data;
-      this.filteredProductos = data;
-    }); */
-  }
-
-  /**
-   * Carga los productos desde el servicio ProductService utilizando datos desde un archivo JSON.
-   */
-  loadProductosFromJson(): void {
-    this.productService.getProductsFromJson().subscribe(data => {
-      this.productos = data;
-      this.filteredProductos = data;
-      console.log('Productos obtenidos:', this.productos); // Verificación en consola de los productos obtenidos
+    this.loading = true;
+    this.productService.getProductos().subscribe({
+      next: (data) => {
+        this.productos = data;
+        this.filteredProductos = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error cargando productos:', err);
+        this.loading = false;
+      }
     });
   }
 
   /**
-   * Filtra los productos basado en la consulta de búsqueda.
+   * Filtra los productos según la búsqueda.
    */
   filterProductos(): void {
     if (this.searchQuery) {
       this.filteredProductos = this.productos.filter(product =>
-        product.nombre.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        product.descripcionCorta.toLowerCase().includes(this.searchQuery.toLowerCase())
+        product.nombre?.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        product.descripcion?.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     } else {
       this.filteredProductos = this.productos;
@@ -75,58 +59,64 @@ export class AdminProductosComponent implements OnInit {
   }
 
   /**
-   * Selecciona un producto para editar o visualizar.
+   * Selecciona un producto para edición.
    * @param product Producto seleccionado.
    */
   selectProduct(product: Producto): void {
-    this.selectedProduct = { ...product }; // Clona el producto seleccionado para evitar modificar el original accidentalmente
-    this.isEditing = true; // Establece el modo de edición activo
-    this.isAdding = false; // Asegura que no se esté añadiendo un nuevo producto al mismo tiempo
+    this.selectedProduct = { ...product };
+    this.isEditing = true;
+    this.isAdding = false;
   }
 
   /**
-   * Guarda un producto editado o añadido.
+   * Crea o actualiza un producto según el modo actual (Agregar o Editar).
    */
-  saveProduct(): void {
-  /*   if (this.isAdding) {
-      this.productService.addProducto(this.selectedProduct!).subscribe(() => {
-        this.loadProductos(); // Recarga la lista de productos después de añadir uno nuevo
+  actualizarProducto(): void {
+    if (this.isAdding && this.selectedProduct) {
+      this.productService.crearProducto(this.selectedProduct).subscribe({
+        next: () => this.loadProductos(),
+        error: (err) => console.error('Error agregando producto:', err)
+      });
+    } else if (this.selectedProduct?.id !== undefined) {
+      this.productService.actualizarProducto(this.selectedProduct.id, this.selectedProduct).subscribe({
+        next: () => this.loadProductos(),
+        error: (err) => console.error('Error actualizando producto:', err)
       });
     } else {
-      const productId = this.selectedProduct?.id!;
-      this.productService.updateProducto(productId, this.selectedProduct!).subscribe(() => {
-        this.loadProductos(); // Recarga la lista de productos después de actualizar uno existente
-      });
-    } */
-    this.cancelEdit(); // Finaliza el modo de edición
+      console.error('El producto no tiene un ID válido para actualizar.');
+    }
+    this.cancelEdit();
   }
+
 
   /**
    * Elimina un producto.
    * @param product Producto a eliminar.
    */
-  deleteProduct(product: Producto): void {
-/*     const productId = product.id!;
-    this.productService.deleteProducto(productId).subscribe(() => {
-      this.loadProductos(); // Recarga la lista de productos después de eliminar uno
-    }); */
+  eliminarProducto(product: Producto): void {
+    if (product.id) {
+      this.productService.eliminarProducto(product.id).subscribe({
+        next: () => this.loadProductos(),
+        error: (err) => console.error('Error eliminando producto:', err)
+      });
+    }
   }
 
   /**
-   * Cancela el modo de edición o añadido.
+   * Cancela la edición o adición de un producto.
    */
   cancelEdit(): void {
-    this.selectedProduct = null; // Reinicia el producto seleccionado
-    this.isEditing = false; // Desactiva el modo de edición
-    this.isAdding = false; // Asegura que no se esté añadiendo un nuevo producto al mismo tiempo
+    this.selectedProduct = null;
+    this.isEditing = false;
+    this.isAdding = false;
   }
 
   /**
-   * Prepara el formulario para añadir un nuevo producto.
+   * Prepara el formulario para agregar un nuevo producto.
    */
-  addProduct(): void {
-    this.selectedProduct = new Producto(); // Crea una nueva instancia de Producto
-    this.isAdding = true; // Activa el modo de añadir producto
-    this.isEditing = true; // Establece el modo de edición activo
+  crearProducto(): void {
+    this.selectedProduct = { id: 0, nombre: '', descripcion: '', precio: 0, imagenUrl: '' } as Producto;
+    this.isAdding = true;
+    this.isEditing = true;
   }
 }

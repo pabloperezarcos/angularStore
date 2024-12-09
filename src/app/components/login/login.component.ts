@@ -16,32 +16,22 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule]
 })
 export class LoginComponent {
-  /** Nombre de usuario ingresado */
-  username: string = '';
+  username = '';
+  password = '';
+  loginFailed = false;
 
-  /** Contraseña ingresada */
-  password: string = '';
-
-  /** Mensaje de error para mostrar en caso de fallo en el inicio de sesión */
-  errorMessage: string = '';
-
-  /**
-   * Constructor que inyecta los servicios de autenticación y enrutamiento.
-   * @param authService Servicio de autenticación para gestionar el inicio de sesión.
-   * @param router Servicio de enrutamiento para navegar entre vistas.
-   */
   constructor(private authService: AuthService, private router: Router) { }
 
   /**
-   * Maneja el proceso de inicio de sesión utilizando el servicio de autenticación.
-   * Si el inicio de sesión es exitoso, navega a la página principal. De lo contrario, muestra un mensaje de error.
+   * Maneja el evento de login al enviar las credenciales al AuthService.
    */
   onLogin(): void {
-    this.authService.login(this.username, this.password).subscribe(success => {
+    this.authService.login(this.username, this.password).subscribe((success) => {
       if (success) {
-        this.router.navigate(['/']);
+        this.loginFailed = false;
+        this.router.navigate(['/']); // Redirige al dashboard después del login exitoso
       } else {
-        this.errorMessage = 'Nombre de usuario o contraseña incorrectos';
+        this.loginFailed = true; // Muestra un mensaje de error si el login falla
       }
     });
   }

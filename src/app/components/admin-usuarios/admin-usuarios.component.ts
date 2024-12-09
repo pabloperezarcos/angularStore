@@ -89,8 +89,8 @@ export class AdminUsuariosComponent implements OnInit {
    */
   loadUsuarios(): void {
     this.http.get<{ usuarios: User[] }>('app/data/usuarios.json').subscribe(data => {
-      this.authService.setUsuarios(data.usuarios);
-      this.usuarios = this.authService.getAllUsers();
+/*       this.authService.setUsuarios(data.usuarios);
+      this.usuarios = this.authService.getAllUsers(); */
       this.filteredUsuarios = [...this.usuarios];
     });
   }
@@ -124,12 +124,12 @@ export class AdminUsuariosComponent implements OnInit {
    * Guarda los cambios realizados a un usuario existente o añade un nuevo usuario a la lista.
    */
   saveUser(): void {
-    if (this.isAdding) {
+/*     if (this.isAdding) {
       this.authService.addUser(this.selectedUser!);
     } else {
       this.authService.updateUserProfile(this.selectedUser!);
     }
-    this.usuarios = this.authService.getAllUsers();
+    this.usuarios = this.authService.getAllUsers(); */
     this.filteredUsuarios = [...this.usuarios];
     this.cancelEdit();
   }
@@ -139,8 +139,8 @@ export class AdminUsuariosComponent implements OnInit {
    * @param user Usuario a eliminar.
    */
   deleteUser(user: User): void {
-    this.authService.deleteUser(user);
-    this.usuarios = this.authService.getAllUsers();
+/*     this.authService.deleteUser(user);
+    this.usuarios = this.authService.getAllUsers(); */
     this.filteredUsuarios = [...this.usuarios];
   }
 

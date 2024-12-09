@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   /** URL del endpoint de login en el backend */
-  private loginUrl = 'http://localhost:8080/api/login'; // Asegúrate de que este endpoint exista en tu backend
+  private loginUrl = 'http://localhost:8080/api/usuario'; // Asegúrate de que este endpoint exista en tu backend
 
   /** Clave para almacenar el token en el localStorage */
   private TOKEN_KEY = 'authToken';

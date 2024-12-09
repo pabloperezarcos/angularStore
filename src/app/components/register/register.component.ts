@@ -64,7 +64,7 @@ export class RegisterComponent {
       imagen: '/assets/default-profile.png'
     };
 
-    this.authService.addUser(newUser);
+    //this.authService.addUser(newUser);
     this.router.navigate(['/login']);
   }
 
