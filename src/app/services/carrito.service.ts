@@ -1,85 +1,122 @@
 import { Injectable } from '@angular/core';
+import { Producto } from '../models/producto.model';
 import { BehaviorSubject } from 'rxjs';
-import { Product } from '../models/producto.model';
+import { ProductService } from './product.service';
 
 /**
- * Servicio para gestionar el carrito de compras.
+ * Interfaz que define la estructura de un item en el carrito.
  */
+interface CarritoItem {
+  producto: Producto;
+  quantity: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class CarritoService {
-  /** Lista de productos en el carrito */
-  private carritoItems: { product: Product; quantity: number }[] = [];
-  /** Observable para notificar cambios */
-  private carritoSubject = new BehaviorSubject<
-    { product: Product; quantity: number }[]
-  >(this.carritoItems);
+  private carritoItems: CarritoItem[] = [];
+  private carritoSubject = new BehaviorSubject<CarritoItem[]>(this.carritoItems);
+  carritoActualizado = this.carritoSubject.asObservable();
+  private purchasedItems: CarritoItem[] = [];
 
-  /** Observable del carrito */
-  carrito$ = this.carritoSubject.asObservable();
-
-  /**
-   * Obtiene los items actuales del carrito.
-   */
-  getCarritoItems(): { product: Product; quantity: number }[] {
-    return [...this.carritoItems];
+  constructor(private productService: ProductService) {
+    this.loadCarrito();
   }
 
-  /**
-   * Añade un producto al carrito o actualiza su cantidad.
-   * @param product Producto a añadir.
-   * @param quantity Cantidad del producto.
-   */
-  addToCarrito(product: Product, quantity: number): void {
-    const existingItem = this.carritoItems.find(
-      (item) => item.product.sku === product.sku
-    );
-
-    if (existingItem) {
-      existingItem.quantity += quantity;
-    } else {
-      this.carritoItems.push({ product, quantity });
-    }
-
-    // Notifica a los suscriptores
-    this.carritoSubject.next([...this.carritoItems]);
-    console.log('Carrito actualizado:', this.carritoItems);
-
-  }
-
-  /**
-   * Actualiza la cantidad de un producto en el carrito.
-   * @param product Producto a actualizar.
-   * @param quantity Nueva cantidad.
-   */
-  updateQuantity(product: Product, quantity: number): void {
-    const existingItem = this.carritoItems.find(
-      (item) => item.product.sku === product.sku
-    );
-
-    if (existingItem) {
-      existingItem.quantity = quantity;
+  private saveCarrito(): void {
+    if (this.isLocalStorageAvailable()) {
+      localStorage.setItem('carrito', JSON.stringify(this.carritoItems));
       this.carritoSubject.next(this.carritoItems);
     }
   }
 
-  /**
-   * Remueve un producto del carrito.
-   * @param product Producto a remover.
-   */
-  removeFromCarrito(product: Product): void {
-    this.carritoItems = this.carritoItems.filter(
-      (item) => item.product.sku !== product.sku
-    );
-    this.carritoSubject.next(this.carritoItems);
+  private loadCarrito(): void {
+    if (this.isLocalStorageAvailable()) {
+      const carritoSaved = localStorage.getItem('carrito');
+      if (carritoSaved) {
+        this.carritoItems = JSON.parse(carritoSaved);
+        this.carritoSubject.next(this.carritoItems);
+      }
+    }
+  }
+
+  private isLocalStorageAvailable(): boolean {
+    try {
+      const testKey = '__test__';
+      localStorage.setItem(testKey, testKey);
+      localStorage.removeItem(testKey);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   /**
-   * Limpia el carrito de compras.
+   * Sincroniza el carrito con el backend.
+   * Si algún producto del carrito ha cambiado en el backend, actualiza la información local.
    */
+  syncCarritoWithBackend(): void {
+    this.carritoItems.forEach((item) => {
+      this.productService.getProductoById(item.producto.id!).subscribe(
+        (productoActualizado) => {
+          item.producto = productoActualizado;
+          this.saveCarrito();
+        },
+        (error) => {
+          console.error('Error sincronizando producto:', error);
+        }
+      );
+    });
+  }
+
+  getCarritoItems(): CarritoItem[] {
+    return this.carritoItems;
+  }
+
+  getItemCount(): number {
+    return this.carritoItems.reduce((sum, item) => sum + item.quantity, 0);
+  }
+
+  addToCarrito(producto: Producto, quantity: number): void {
+    const existingProducto = this.carritoItems.find(
+      (item) => item.producto.id === producto.id
+    );
+    if (existingProducto) {
+      existingProducto.quantity += quantity;
+    } else {
+      this.carritoItems.push({ producto, quantity });
+    }
+    this.saveCarrito();
+  }
+
+  removeFromCarrito(producto: Producto): void {
+    this.carritoItems = this.carritoItems.filter(
+      (item) => item.producto.id !== producto.id
+    );
+    this.saveCarrito();
+  }
+
+  updateQuantity(producto: Producto, quantity: number): void {
+    const existingItem = this.carritoItems.find(
+      (item) => item.producto.id === producto.id
+    );
+    if (existingItem) {
+      existingItem.quantity = quantity;
+    }
+    this.saveCarrito();
+  }
+
   clearCarrito(): void {
     this.carritoItems = [];
-    this.carritoSubject.next([...this.carritoItems]);
+    this.saveCarrito();
+  }
+
+  savePurchasedItems(): void {
+    this.purchasedItems = [...this.carritoItems];
+  }
+
+  getPurchasedItems(): CarritoItem[] {
+    return this.purchasedItems;
   }
 }

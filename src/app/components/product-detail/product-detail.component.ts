@@ -2,34 +2,31 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, RouterModule } from '@angular/router';
 import { CarritoService } from '../../services/carrito.service';
 import { ProductService } from '../../services/product.service';
-import { Product } from '../../models/producto.model';
+import { Producto } from '../../models/producto.model';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { switchMap } from 'rxjs/operators';
 
-/**
- * ProductDetailComponent maneja la visualización de los detalles de un producto individual,
- * incluyendo productos relacionados y la opción de agregar al carrito.
- */
 @Component({
-  selector: 'app-product-detail',
+  selector: 'app-producto-detail',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, CurrencyPipe],
   templateUrl: './product-detail.component.html',
-  styleUrls: ['./product-detail.component.scss']
+  styleUrls: ['./product-detail.component.scss'],
 })
 export class ProductDetailComponent implements OnInit {
   /** Producto actual */
-  product: Product | undefined;
+  producto: Producto | undefined;
 
   /** Productos relacionados */
-  relatedProducts: Product[] = [];
+  relatedProductos: Producto[] = [];
 
   /** Indicador de carga */
   loading = true;
 
   /** Cantidad del producto a agregar al carrito */
   quantity: number = 1;
+  
 
   /**
    * Constructor que inyecta las dependencias necesarias para obtener los detalles del producto y manejar el carrito.
@@ -43,30 +40,47 @@ export class ProductDetailComponent implements OnInit {
     private carritoService: CarritoService
   ) { }
 
+  
+
   /**
-   * Inicializa el componente cargando el producto y los productos relacionados basados en el SKU de la ruta.
+   * Inicializa el componente cargando el producto y los productos relacionados.
    */
   ngOnInit() {
-    this.route.paramMap.pipe(
-      switchMap((params: ParamMap) => {
-        const sku = params.get('sku');
-        this.loading = true;
-        return this.productService.getProductsFromJson(); // Cambiado para cargar productos desde JSON
-      })
-    ).subscribe({
-      next: (data) => {
-        const sku = this.route.snapshot.paramMap.get('sku');
-        this.product = data.find(p => p.sku === sku);
-        this.relatedProducts = data.filter(p => p.sku !== sku).slice(0, 3);
-        console.log('Producto actual:', this.product);
-        console.log('Productos relacionados:', this.relatedProducts);
-        this.loading = false;
+    this.route.paramMap
+      .pipe(
+        switchMap((params: ParamMap) => {
+          const id = params.get('id'); // Cambiado a `id` en lugar de `sku`
+          this.loading = true;
+          return this.productService.getProductoById(Number(id));
+        })
+      )
+      .subscribe({
+        next: (producto) => {
+          this.producto = producto;
+          this.loadRelatedProductos(); // Cargar productos relacionados
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error al cargar el producto:', err);
+          this.loading = false;
+        },
+      });
+  }
+
+  /**
+   * Carga productos relacionados desde el backend.
+   */
+  loadRelatedProductos(): void {
+    this.productService.getProductos().subscribe({
+      next: (productos) => {
+        this.relatedProductos = productos
+          .filter((p) => p.id !== this.producto?.id) // Excluir el producto actual
+          .slice(0, 3); // Limitar a 3 productos
+        console.log('Productos relacionados:', this.relatedProductos);
       },
       error: (err) => {
-        console.error(err);
-        this.loading = false;
+        console.error('Error al cargar productos relacionados:', err);
       },
-      complete: () => console.log('Carga de producto completa')
     });
   }
 
@@ -75,10 +89,9 @@ export class ProductDetailComponent implements OnInit {
    * Muestra una alerta al usuario confirmando la acción.
    */
   addToCarrito(): void {
-    if (this.product) {
-      this.carritoService.addToCarrito(this.product, this.quantity);
+    if (this.producto) {
+      this.carritoService.addToCarrito(this.producto, this.quantity);
       alert('Producto agregado al carrito');
     }
   }
-
 }

@@ -20,12 +20,12 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-2">
-                            <img [src]="item.product.imagen" alt="{{ item.product.nombre }}" class="img-thumbnail"
+                            <img [src]="item.producto.imagen" alt="{{ item.producto.nombre }}" class="img-thumbnail"
                                 style="width: 100%;">
                         </div>
                         <div class="col-md-6">
-                            <h5>{{ item.product.nombre }}</h5>
-                            <p>{{ item.product.precio | currency:'CLP':'symbol-narrow':'1.0-0':'es-CL' }} x {{
+                            <h5>{{ item.producto.nombre }}</h5>
+                            <p>{{ item.producto.precio | currency:'CLP':'symbol-narrow':'1.0-0':'es-CL' }} x {{
                                 item.quantity}}</p>
                         </div>
                         <div class="col-md-4 text-right">

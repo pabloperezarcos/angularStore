@@ -1,0 +1,30 @@
+<div class="container mt-4">
+    <h2 class="text-center">Resultados de búsqueda</h2>
+    <p class="text-center">
+        <strong>Termino buscado:</strong> "{{ searchTerm }}"
+    </p>
+
+    <div *ngIf="loading" class="text-center">
+        <p>Cargando resultados...</p>
+    </div>
+
+    <div *ngIf="!loading && productos.length === 0" class="text-center">
+        <p>No se encontraron resultados para "{{ searchTerm }}".</p>
+    </div>
+
+    <div *ngIf="!loading && productos.length > 0" class="row mt-4">
+        <div class="col-lg-4 col-md-6 mb-4" *ngFor="let producto of productos">
+            <div class="card">
+                <img [src]="producto.imagen" class="card-img-top" [alt]="producto.nombre">
+                <div class="card-body">
+                    <h5 class="card-title">{{ producto.nombre }}</h5>
+                    <p class="card-text">{{ producto.descripcion }}</p>
+                    <p class="price">
+                        {{ producto.precio | currency:'CLP':'symbol-narrow':'1.0-0':'es-CL' }}
+                    </p>
+                    <a [routerLink]="['/producto', producto.id]" class="btn btn-primary">Ver Producto</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

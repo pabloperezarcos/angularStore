@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CarritoService } from '../../services/carrito.service';
-import { Product } from '../../models/producto.model';
+import { Producto } from '../../models/producto.model';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { RouterModule, Router } from '@angular/router';
  */
 interface CarritoItem {
   /** Producto en el carrito. */
-  product: Product;
+  producto: Producto;
   /** Cantidad del producto en el carrito. */
   quantity: number;
 }
@@ -27,7 +27,7 @@ interface CarritoItem {
 })
 export class CarritoComponent implements OnInit {
   /** Array que contiene los items del carrito. */
-  carritoItems: { product: Product; quantity: number }[] = [];
+  carritoItems: CarritoItem[] = [];
   /** Total de la compra. */
   total: number = 0;
   /** Método de pago seleccionado. */
@@ -49,21 +49,16 @@ export class CarritoComponent implements OnInit {
    * Carga los items del carrito y verifica si está vacío.
    */
   ngOnInit(): void {
-    // Suscribirse al observable para recibir actualizaciones en tiempo real
-    this.carritoService.carrito$.subscribe((items) => {
-      this.carritoItems = items;
-      this.calculateTotal();
-    });
+    this.carritoItems = this.carritoService.getCarritoItems();
+    this.calculateTotal();
+    this.checkIfCartIsEmpty();
   }
 
   /**
    * Calcula el total de la compra sumando el precio de cada item multiplicado por su cantidad.
    */
   calculateTotal(): void {
-    this.total = this.carritoItems.reduce(
-      (sum, item) => sum + item.product.precio * item.quantity,
-      0
-    );
+    this.total = this.carritoItems.reduce((sum, item) => sum + (item.producto?.precio ?? 0) * (item.quantity ?? 0), 0);
   }
 
   /**
@@ -71,10 +66,11 @@ export class CarritoComponent implements OnInit {
    * @param index Índice del item a remover.
    */
   removeItem(index: number): void {
-    const item = this.carritoItems[index];
-    this.carritoService.removeFromCarrito(item.product);
+    this.carritoService.removeFromCarrito(this.carritoItems[index].producto);
+    this.carritoItems = this.carritoService.getCarritoItems();
+    this.calculateTotal();
+    this.checkIfCartIsEmpty();
   }
-
 
   /**
    * Actualiza la cantidad de un producto en el carrito.
@@ -82,10 +78,10 @@ export class CarritoComponent implements OnInit {
    * @param quantity Nueva cantidad del producto.
    */
   updateQuantity(index: number, quantity: number): void {
-    const item = this.carritoItems[index];
-    this.carritoService.updateQuantity(item.product, quantity);
+    this.carritoService.updateQuantity(this.carritoItems[index].producto, quantity);
+    this.carritoItems = this.carritoService.getCarritoItems();
+    this.calculateTotal();
   }
-
 
   /**
    * Verifica si el carrito está vacío.
@@ -108,7 +104,7 @@ export class CarritoComponent implements OnInit {
 
     setTimeout(() => {
       this.paymentMessage = 'Pago Exitoso, estás siendo redireccionado al checkout...';
-      //this.carritoService.savePurchasedItems();
+      this.carritoService.savePurchasedItems();
 
       setTimeout(() => {
         this.limpiarCarrito();
@@ -123,6 +119,8 @@ export class CarritoComponent implements OnInit {
    */
   limpiarCarrito(): void {
     this.carritoService.clearCarrito();
+    this.carritoItems = [];
+    this.calculateTotal();
+    this.checkIfCartIsEmpty();
   }
-
 }

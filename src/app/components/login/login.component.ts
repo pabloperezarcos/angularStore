@@ -1,26 +1,38 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
+/**
+ * LoginComponent maneja la lógica y la interfaz para el inicio de sesión de usuarios.
+ * Permite a los usuarios ingresar su nombre de usuario y contraseña para autenticarse.
+ */
 @Component({
   selector: 'app-login',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  standalone: true,
+  imports: [CommonModule, FormsModule]
 })
 export class LoginComponent {
-  /** Nombre de usuario ingresado */
-  username: string = '';
+  username = '';
+  password = '';
+  loginFailed = false;
 
-  /** Contraseña ingresada */
-  password: string = '';
+  constructor(private authService: AuthService, private router: Router) { }
 
-  /** Mensaje de error para mostrar en caso de fallo en el inicio de sesión */
-  errorMessage: string = '';
-
-  onLogin() {
-    // Lógica para autenticar al usuario
-    console.log('Usuario autenticado:', this.username);
+  /**
+   * Maneja el evento de login al enviar las credenciales al AuthService.
+   */
+  onLogin(): void {
+    this.authService.login(this.username, this.password).subscribe((success) => {
+      if (success) {
+        this.loginFailed = false;
+        this.router.navigate(['/']); // Redirige al dashboard después del login exitoso
+      } else {
+        this.loginFailed = true; // Muestra un mensaje de error si el login falla
+      }
+    });
   }
 }

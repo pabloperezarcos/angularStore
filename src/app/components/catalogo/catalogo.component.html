@@ -1,20 +1,26 @@
-<!-- Hero Section -->
+<!-- Sección principal -->
 <div class="jumbotron text-center">
     <h1 class="display-4">Nuestros Cursos</h1>
     <p class="lead">Explora nuestra selección de cursos de la mejor calidad.</p>
 </div>
 
-<!-- catalogo.component.html -->
-<div class="container">
-    <div class="row">
+<!-- Catálogo de productos -->
+<div class="container mt-4">
+    <div *ngIf="loading" class="text-center">
+        <p>Cargando cursos...</p>
+    </div>
+    <div *ngIf="!loading && productos.length === 0" class="text-center">
+        <p>No hay cursos disponibles en este momento.</p>
+    </div>
+    <div class="row" *ngIf="!loading && productos.length > 0">
         <div class="col-lg-4 col-md-6 mb-4" *ngFor="let product of productos">
             <div class="card lift-on-hover">
-                <img [src]="product.imagen" class="card-img-top" alt="{{product.nombre}}">
+                <img [src]="product.imagen" class="card-img-top" alt="{{ product.nombre }}">
                 <div class="card-body">
-                    <h5 class="card-title">{{product.nombre}}</h5>
-                    <p class="card-text">{{product.descripcion}}</p>
+                    <h5 class="card-title">{{ product.nombre }}</h5>
+                    <p class="card-text">{{ product.descripcion }}</p>
                     <p class="price">{{ product.precio | currency:'CLP':'symbol-narrow':'1.0-0':'es-CL' }}</p>
-                    <a [routerLink]="['/producto', product.sku]" class="btn btn-primary">Ver Curso</a>
+                    <a [routerLink]="['/producto', product.id]" class="btn btn-primary">Ver Curso</a>
                 </div>
             </div>
         </div>
