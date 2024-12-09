@@ -4,8 +4,8 @@ import { ProductService } from '../../services/product.service';
 import { of, throwError } from 'rxjs';
 import { Producto } from '../../models/producto.model';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
-import { Router, ActivatedRoute } from '@angular/router';
+import { provideRouter, Routes } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeEsCl from '@angular/common/locales/es-CL';
@@ -29,7 +29,11 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     const productServiceMock = jasmine.createSpyObj('ProductService', ['getProductos']);
-    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+
+    const routes: Routes = [
+      { path: '', component: HomeComponent },
+      // Agrega otras rutas si es necesario
+    ];
 
     await TestBed.configureTestingModule({
       imports: [
@@ -38,10 +42,9 @@ describe('HomeComponent', () => {
       providers: [
         { provide: LOCALE_ID, useValue: 'es-CL' },
         { provide: ProductService, useValue: productServiceMock },
-        { provide: ActivatedRoute, useValue: {} },
-        { provide: Router, useValue: routerSpy },
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => null } } } },
         provideHttpClientTesting(), // Proveedor para HttpClientTesting
-        provideRouter([]), // Proveedor para RouterTesting con rutas vacías
+        provideRouter(routes), // Proveedor para Router con rutas definidas
       ],
     }).compileComponents();
 
