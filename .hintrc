@@ -15,6 +15,7 @@
       {
         "image-alt": "off"
       }
-    ]
+    ],
+    "typescript-config/consistent-casing": "off"
   }
 }
