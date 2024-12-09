@@ -17,13 +17,14 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<any>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
+  // Recuperar el usuario del localStorage al cargar la aplicación
   constructor(private http: HttpClient, private router: Router) {
     const isLoggedIn = this.isBrowser() && this.isLoggedIn();
-    this.isAuthenticatedSubject.next(isLoggedIn);
+    const storedUser = this.isBrowser() ? localStorage.getItem('currentUser') : null;
 
-    if (isLoggedIn) {
-      const user = { username: 'default', rol: 'user' }; // Ajustar según backend
-      this.currentUserSubject.next(user);
+    this.isAuthenticatedSubject.next(isLoggedIn);
+    if (isLoggedIn && storedUser) {
+      this.currentUserSubject.next(JSON.parse(storedUser));
     }
   }
 
@@ -44,24 +45,24 @@ export class AuthService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = { username, password };
 
-    return this.http
-      .post<{ message: string; user: { username: string; rol: string } }>(this.loginUrl, body, { headers })
-      .pipe(
-        tap((response) => {
-          if (response.message === 'Login exitoso') {
-            localStorage.setItem(this.AUTH_KEY, 'true');
-            localStorage.setItem('currentUser', JSON.stringify(response.user)); // Guarda el usuario en localStorage
-            this.currentUserSubject.next(response.user); // Actualiza el BehaviorSubject
-            this.isAuthenticatedSubject.next(true);
-          }
-        }),
-        map((response) => response.message === 'Login exitoso'),
-        catchError((error) => {
-          console.error('Error durante el login:', error);
-          return of(false);
-        })
-      );
+    return this.http.post<{ message: string, user: any }>(this.loginUrl, body, { headers }).pipe(
+      tap((response) => {
+        if (response.message === 'Login exitoso') {
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('currentUser', JSON.stringify(response.user)); // Guardar usuario completo
+          this.isAuthenticatedSubject.next(true);
+          this.currentUserSubject.next(response.user); // Actualizar BehaviorSubject
+        }
+      }),
+      map((response) => response.message === 'Login exitoso'),
+      catchError((error) => {
+        console.error('Error durante el login:', error);
+        return of(false);
+      })
+    );
   }
+
+
 
   /**
  * Verifica si el usuario tiene rol de administrador.
