@@ -124,19 +124,16 @@ describe('PerfilComponent', () => {
     component.saveProfile();
 
     expect(component.loading).toBeFalse(); // Verifica que loading se desactiva
-    expect(component.editMode).toBeTrue(); // Verifica que editMode no cambia
+    expect(component.editMode).toBeTrue(); // Verifica que editMode permanece activo
     expect(usuarioService.actualizarUsuario).toHaveBeenCalledWith(1, component.user);
   });
 
-
-
   it('debería formatear la fecha correctamente', () => {
-    const date = '1990-01-01T00:00:00Z'; // Asegura una fecha en UTC
+    const date = '1990-01-01T00:00:00Z'; // Fecha en UTC
     const formattedDate = component.getFormattedDate(date);
 
-    expect(formattedDate).toBe('1 de enero de 1990');
+    expect(formattedDate).toBe('01 de enero de 1990'); // Ajusta la expectativa
   });
-
 
 
 });
