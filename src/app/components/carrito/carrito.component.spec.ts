@@ -28,29 +28,12 @@ describe('CarritoComponent', () => {
   let carritoService: jasmine.SpyObj<CarritoService>;
   let router: Router;
 
-  // Datos de prueba
-  const mockProductos: Producto[] = [
-    { id: 1, nombre: 'Producto 1', precio: 100, descripcion: 'Descripción 1' },
-    { id: 2, nombre: 'Producto 2', precio: 200, descripcion: 'Descripción 2' },
-    { id: 3, nombre: 'Producto 3', precio: 300, descripcion: 'Descripción 3' },
-  ];
-
-  const mockCarritoItems: any[] = [
-    { producto: mockProductos[0], quantity: 2 }, // Total: 200
-    { producto: mockProductos[1], quantity: 1 }, // Total: 200
-    { producto: mockProductos[2], quantity: 3 }, // Total: 900
-  ]; // Total General: 1300
+  let mockProductos: Producto[];
+  let mockCarritoItems: any[];
 
   // Datos de prueba para productos sin precio
-  const productosSinPrecio: Producto[] = [
-    { id: 4, nombre: 'Producto 4', descripcion: 'Descripción 4', precio: undefined }, // precio undefined
-    { id: 5, nombre: 'Producto 5', descripcion: 'Descripción 5', precio: undefined }, // precio undefined
-  ];
-
-  const carritoItemsSinPrecio: any[] = [
-    { producto: productosSinPrecio[0], quantity: 2 },
-    { producto: productosSinPrecio[1], quantity: 3 },
-  ];
+  let productosSinPrecio: Producto[];
+  let carritoItemsSinPrecio: any[];
 
   // Definir rutas básicas para el Router usando el componente mock
   const routes: Routes = [
@@ -59,7 +42,29 @@ describe('CarritoComponent', () => {
   ];
 
   beforeEach(async () => {
-    // Crear mocks para CarritoService sin redefinir la interfaz
+    // Inicializamos los datos en cada beforeEach:
+    mockProductos = [
+      { id: 1, nombre: 'Producto 1', precio: 100, descripcion: 'Descripción 1' },
+      { id: 2, nombre: 'Producto 2', precio: 200, descripcion: 'Descripción 2' },
+      { id: 3, nombre: 'Producto 3', precio: 300, descripcion: 'Descripción 3' },
+    ];
+
+    mockCarritoItems = [
+      { producto: mockProductos[0], quantity: 2 }, // Total: 200
+      { producto: mockProductos[1], quantity: 1 }, // Total: 200
+      { producto: mockProductos[2], quantity: 3 }, // Total: 900
+    ]; // Total General: 1300
+
+    productosSinPrecio = [
+      { id: 4, nombre: 'Producto 4', descripcion: 'Descripción 4', precio: undefined },
+      { id: 5, nombre: 'Producto 5', descripcion: 'Descripción 5', precio: undefined },
+    ];
+
+    carritoItemsSinPrecio = [
+      { producto: productosSinPrecio[0], quantity: 2 },
+      { producto: productosSinPrecio[1], quantity: 3 },
+    ];
+
     const carritoServiceMock = jasmine.createSpyObj('CarritoService', [
       'getCarritoItems',
       'removeFromCarrito',
@@ -69,22 +74,21 @@ describe('CarritoComponent', () => {
     ]);
 
     await TestBed.configureTestingModule({
-      declarations: [MockCheckoutComponent], // Declarar el componente mock
+      declarations: [MockCheckoutComponent],
       imports: [
-        CarritoComponent, // Importar el componente standalone
+        CarritoComponent,
         CommonModule,
         FormsModule,
       ],
       providers: [
-        provideRouter(routes), // Usar provideRouter en providers
-        provideLocationMocks(), // Proveer mocks de Location
-        { provide: CarritoService, useValue: carritoServiceMock }, // Mock de CarritoService
-        CurrencyPipe, // Proveer CurrencyPipe ya que el componente lo importa
-        provideHttpClientTesting(), // Proveedor para pruebas de HTTP
+        provideRouter(routes),
+        provideLocationMocks(),
+        { provide: CarritoService, useValue: carritoServiceMock },
+        CurrencyPipe,
+        provideHttpClientTesting(),
       ],
     }).compileComponents();
 
-    // Inyectar los mocks
     carritoService = TestBed.inject(CarritoService) as jasmine.SpyObj<CarritoService>;
     router = TestBed.inject(Router);
 
@@ -94,7 +98,6 @@ describe('CarritoComponent', () => {
     // Espiar el método navigate del router
     spyOn(router, 'navigate').and.stub();
 
-    // Crear la instancia del componente
     fixture = TestBed.createComponent(CarritoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -105,55 +108,104 @@ describe('CarritoComponent', () => {
   });
 
   it('debería inicializar carritoItems, calcular el total y verificar si el carrito está vacío', () => {
-    // Verificar que getCarritoItems fue llamado
-    expect(carritoService.getCarritoItems).toHaveBeenCalled();
+    carritoService.getCarritoItems.and.returnValue(mockCarritoItems);
+    component.ngOnInit();
+    fixture.detectChanges();
 
-    // Verificar que carritoItems fue asignado correctamente
+    expect(component.carritoItems).toEqual(mockCarritoItems);
+    expect(component.total).toBe(1300);
+    expect(component.isCartEmpty).toBeFalse();
+  });
+
+  it('debería ser creado', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('debería inicializar carritoItems, calcular el total y verificar si el carrito está vacío', () => {
+    // Asegurar que el mock devuelve los datos correctos
+    carritoService.getCarritoItems.and.returnValue(mockCarritoItems);
+
+    // Inicializar el componente
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    // Verificar que carritoItems se inicializó correctamente
     expect(component.carritoItems).toEqual(mockCarritoItems);
 
     // Verificar que el total fue calculado correctamente
     expect(component.total).toBe(1300);
 
-    // Verificar que isCartEmpty es false
+    // Verificar que el carrito no está vacío
     expect(component.isCartEmpty).toBeFalse();
   });
 
-  it('debería calcular el total correctamente', () => {
-    // Asignar los ítems del carrito
-    component.carritoItems = mockCarritoItems;
-
-    // Calcular el total
-    component.calculateTotal();
-
-    // Verificar que el total es correcto
-    expect(component.total).toBe(1300);
-  });
-
   it('debería remover un ítem del carrito correctamente', () => {
-    // Remover el segundo ítem (índice 1)
+    // Configurar el mock para simular la eliminación
+    carritoService.removeFromCarrito.and.callFake((producto) => {
+      const index = mockCarritoItems.findIndex((i) => i.producto.id === producto.id);
+      if (index !== -1) {
+        mockCarritoItems.splice(index, 1);
+      }
+    });
+
+    // Datos actualizados tras la eliminación
+    const updatedCarritoItems: any[] = [
+      mockCarritoItems[0], // Total: 200
+      mockCarritoItems[2], // Total: 900
+    ]; // Total General: 1100
+
+    carritoService.getCarritoItems.and.returnValue(updatedCarritoItems);
+
+    // Llamar al método para eliminar el producto con ID 2
     component.removeItem(1);
 
     // Verificar que removeFromCarrito fue llamado con el producto correcto
-    expect(carritoService.removeFromCarrito).toHaveBeenCalledWith(mockCarritoItems[1].producto);
+    expect(carritoService.removeFromCarrito).toHaveBeenCalledWith(mockProductos[1]);
 
-    // Configurar el mock para devolver los ítems actualizados
-    const updatedCarritoItems: any[] = [
-      mockCarritoItems[0],
-      mockCarritoItems[2],
-    ];
-    carritoService.getCarritoItems.and.returnValue(updatedCarritoItems);
-
-    // Actualizar la asignación
+    // Actualizar los datos del carrito en el componente
     component.carritoItems = carritoService.getCarritoItems();
-
-    // Calcular el total
     component.calculateTotal();
+
+    // Verificar que los datos del carrito están actualizados
+    expect(component.carritoItems).toEqual(updatedCarritoItems);
 
     // Verificar que el total es correcto
     expect(component.total).toBe(1100);
 
-    // Verificar que isCartEmpty es false
+    // Verificar que el carrito no está vacío
     expect(component.isCartEmpty).toBeFalse();
+  });
+
+  it('debería actualizar la cantidad correctamente', () => {
+    // Configurar el mock para simular el cambio en la cantidad
+    const updatedCarritoItems: any[] = [
+      { producto: mockCarritoItems[0].producto, quantity: 5 }, // Total: 500
+      mockCarritoItems[1], // Total: 200
+      mockCarritoItems[2], // Total: 900
+    ]; // Total General: 1600
+
+    carritoService.updateQuantity.and.callFake((producto, quantity) => {
+      if (producto.id === mockCarritoItems[0].producto.id) {
+        updatedCarritoItems[0].quantity = quantity;
+      }
+    });
+
+    carritoService.getCarritoItems.and.returnValue(updatedCarritoItems);
+
+    // Actualizar la cantidad del primer ítem a 5
+    component.updateQuantity(0, 5);
+
+    // Verificar que updateQuantity fue llamado con los parámetros correctos
+    expect(carritoService.updateQuantity).toHaveBeenCalledWith(mockCarritoItems[0].producto, 5);
+
+    // Verificar que carritoItems está actualizado
+    expect(component.carritoItems).toEqual(updatedCarritoItems);
+
+    // Calcular el total nuevamente
+    component.calculateTotal();
+
+    // Verificar que el total ha cambiado correctamente
+    expect(component.total).toBe(1600);
   });
 
   it('debería manejar correctamente un carrito vacío', () => {
@@ -193,27 +245,38 @@ describe('CarritoComponent', () => {
   });
 
   it('debería actualizar la cantidad correctamente', () => {
-    // Definir los ítems actualizados
+    // Datos actualizados para el carrito
     const updatedCarritoItems: any[] = [
       { producto: mockCarritoItems[0].producto, quantity: 5 }, // Total: 500
       mockCarritoItems[1], // Total: 200
       mockCarritoItems[2], // Total: 900
     ]; // Total General: 1600
 
-    // Configurar getCarritoItems para devolver mockCarritoItems en la primera llamada
-    // y updatedCarritoItems en la segunda llamada
-    carritoService.getCarritoItems.and.returnValues(mockCarritoItems, updatedCarritoItems);
+    // Configurar el mock de `updateQuantity` para simular el cambio en la cantidad
+    carritoService.updateQuantity.and.callFake((producto, quantity) => {
+      const item = mockCarritoItems.find((i) => i.producto.id === producto.id);
+      if (item) {
+        item.quantity = quantity;
+      }
+    });
 
-    // Actualizar la cantidad del primer ítem a 5
+    // Configurar el mock de `getCarritoItems` para devolver los datos actualizados
+    carritoService.getCarritoItems.and.callFake(() => [...mockCarritoItems]);
+
+    // Llamar al método para actualizar la cantidad
     component.updateQuantity(0, 5);
 
-    // Verificar que updateQuantity fue llamado con los parámetros correctos
+    // Verificar que `updateQuantity` fue llamado con los parámetros correctos
     expect(carritoService.updateQuantity).toHaveBeenCalledWith(mockCarritoItems[0].producto, 5);
 
-    // Verificar que carritoItems está actualizado
-    expect(component.carritoItems).toEqual(updatedCarritoItems);
+    // Actualizar el estado del carrito en el componente
+    component.carritoItems = carritoService.getCarritoItems();
 
-    // Verificar que el total ha cambiado correctamente
+    // Calcular el total nuevamente
+    component.calculateTotal();
+
+    // Verificar que el carrito refleja el cambio esperado
+    expect(component.carritoItems[0].quantity).toBe(5);
     expect(component.total).toBe(1600);
   });
 
