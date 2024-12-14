@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { Producto } from '../../models/producto.model';
 
@@ -15,31 +15,35 @@ export class SearchResultsComponent implements OnInit {
   productos: Producto[] = [];
   searchTerm: string = '';
   loading: boolean = true;
+  errorMessage: string = '';
 
-  constructor(private productService: ProductService) { }
+  constructor(
+    private readonly productService: ProductService,
+    private readonly route: ActivatedRoute // Usamos ActivatedRoute para obtener parámetros de consulta
+  ) { }
 
   ngOnInit(): void {
-    // Obtener el término de búsqueda (puedes pasarlo desde el router)
-    const query = new URLSearchParams(window.location.search).get('query');
-    this.searchTerm = query || '';
+    // Obtener el término de búsqueda desde los queryParams
+    this.route.queryParams.subscribe((params) => {
+      this.searchTerm = params['query'] || '';
 
-    if (this.searchTerm) {
-      this.searchProductos(this.searchTerm);
-    } else {
-      this.loading = false;
-    }
+      if (this.searchTerm) {
+        this.searchProductos(this.searchTerm);
+      } else {
+        this.loading = false;
+      }
+    });
   }
 
   searchProductos(term: string): void {
-    this.productService.getProductos().subscribe({
+    this.productService.searchProductos(term).subscribe({
       next: (productos) => {
-        this.productos = productos.filter((producto) =>
-          producto.nombre.toLowerCase().includes(term.toLowerCase())
-        );
+        this.productos = productos; // El backend debería filtrar los productos
         this.loading = false;
       },
       error: (err) => {
         console.error('Error buscando productos:', err);
+        this.errorMessage = 'Hubo un error al cargar los resultados de búsqueda.';
         this.loading = false;
       }
     });

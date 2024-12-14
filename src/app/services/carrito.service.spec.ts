@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { CarritoService } from './carrito.service';
 import { ProductService } from './product.service';
 import { Producto } from '../models/producto.model';
-import { BehaviorSubject, of } from 'rxjs';
+import { of } from 'rxjs';
 
 describe('CarritoService', () => {
   let service: CarritoService;

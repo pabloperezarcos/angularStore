@@ -2,12 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CarritoComponent } from './carrito.component';
 import { CarritoService } from '../../services/carrito.service';
 import { Producto } from '../../models/producto.model';
-import { Router } from '@angular/router';
-import { CurrencyPipe } from '@angular/common';
-import { provideRouter, Routes } from '@angular/router';
+import { provideRouter, Routes, Router } from '@angular/router';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { provideLocationMocks } from '@angular/common/testing';
 
@@ -195,28 +193,28 @@ describe('CarritoComponent', () => {
   });
 
   it('debería actualizar la cantidad correctamente', () => {
+    // Definir los ítems actualizados
+    const updatedCarritoItems: any[] = [
+      { producto: mockCarritoItems[0].producto, quantity: 5 }, // Total: 500
+      mockCarritoItems[1], // Total: 200
+      mockCarritoItems[2], // Total: 900
+    ]; // Total General: 1600
+
+    // Configurar getCarritoItems para devolver mockCarritoItems en la primera llamada
+    // y updatedCarritoItems en la segunda llamada
+    carritoService.getCarritoItems.and.returnValues(mockCarritoItems, updatedCarritoItems);
+
     // Actualizar la cantidad del primer ítem a 5
     component.updateQuantity(0, 5);
 
     // Verificar que updateQuantity fue llamado con los parámetros correctos
     expect(carritoService.updateQuantity).toHaveBeenCalledWith(mockCarritoItems[0].producto, 5);
 
-    // Configurar el mock para devolver los ítems actualizados
-    const updatedCarritoItems: any[] = [
-      { producto: mockCarritoItems[0], quantity: 5 },
-      mockCarritoItems[1],
-      mockCarritoItems[2],
-    ];
-    carritoService.getCarritoItems.and.returnValue(updatedCarritoItems);
-
-    // Actualizar la asignación
-    component.carritoItems = carritoService.getCarritoItems();
-
-    // Calcular el total
-    component.calculateTotal();
+    // Verificar que carritoItems está actualizado
+    expect(component.carritoItems).toEqual(updatedCarritoItems);
 
     // Verificar que el total ha cambiado correctamente
-    // Nuevo total: (100 * 5) + (200 * 1) + (300 * 3) = 500 + 200 + 900 = 1600
     expect(component.total).toBe(1600);
   });
+
 });

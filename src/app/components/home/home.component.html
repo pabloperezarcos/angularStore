@@ -5,8 +5,9 @@
     <p class="lead">Los mejores productos al mejor precio.</p>
     <hr class="my-4">
     <p>Explora nuestras ofertas y productos destacados.</p>
-    <a class="btn btn-primary btn-lg pulse-on-hover" routerLink="/catalogo" role="button">Ver Todos los Productos</a>
+    <button class="btn btn-primary btn-lg pulse-on-hover" (click)="navigateToCatalog()">Ver Todos los Productos</button>
 </div>
+
 <br>
 <div *ngIf="loading" class="text-center">Cargando productos...</div>
 <div class="container" *ngIf="!loading">

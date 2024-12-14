@@ -2,10 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CheckoutComponent } from './checkout.component';
 import { CarritoService } from '../../services/carrito.service';
 import { Producto } from '../../models/producto.model';
-import { provideRouter, Routes } from '@angular/router';
+import { Router, provideRouter, Routes } from '@angular/router';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Router } from '@angular/router';
-import { of } from 'rxjs';
 import { LOCALE_ID } from '@angular/core';
 
 describe('CheckoutComponent', () => {

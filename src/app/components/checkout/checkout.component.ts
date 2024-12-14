@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CarritoService } from '../../services/carrito.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { Producto } from '../../models/producto.model';
 
 /**
@@ -29,7 +28,7 @@ export class CheckoutComponent implements OnInit {
   orderNumber: string = '';
   total: number = 0;
 
-  constructor(private router: Router, private carritoService: CarritoService) {
+  constructor(private readonly router: Router, private readonly carritoService: CarritoService) {
     this.orderNumber = this.generateOrderNumber();
   }
 

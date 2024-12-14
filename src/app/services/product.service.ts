@@ -7,9 +7,9 @@ import { Producto } from '../models/producto.model';
   providedIn: 'root',
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:8080/api/productos'; // URL del backend
+  private readonly apiUrl = 'http://localhost:8080/api/productos'; // URL del backend
 
-  constructor(private http: HttpClient) { }
+  constructor(private readonly http: HttpClient) { }
 
   /**
    * Obtiene todos los productos desde el backend.
@@ -57,4 +57,9 @@ export class ProductService {
   eliminarProducto(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  searchProductos(term: string): Observable<Producto[]> {
+    return this.http.get<Producto[]>(`${this.apiUrl}?query=${term}`);
+  }
+
 }

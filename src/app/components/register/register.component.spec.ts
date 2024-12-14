@@ -81,7 +81,7 @@ describe('RegisterComponent', () => {
 
     const req = httpMock.expectOne('http://localhost:8080/api/usuarios');
     expect(req.request.method).toBe('POST');
-    req.error(new ErrorEvent('Network error'));
+    req.error(new ProgressEvent('error'));
 
     expect(component.successMessage).toBe('');
     expect(component.errorMessage).toBe('Hubo un problema al registrar. Por favor, inténtalo de nuevo.');

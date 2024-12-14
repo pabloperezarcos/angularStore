@@ -21,7 +21,7 @@ export class AdminUsuariosComponent implements OnInit {
   passwordFieldType: string = 'password';
   loading: boolean = false;
 
-  constructor(private usuarioService: UsuarioService) { }
+  constructor(private readonly usuarioService: UsuarioService) { }
 
   ngOnInit(): void {
     this.loadUsuarios();

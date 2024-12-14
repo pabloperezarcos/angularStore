@@ -8,17 +8,17 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
-  private loginUrl = 'http://localhost:8080/api/login'; // URL del backend para login
-  private AUTH_KEY = 'isLoggedIn'; // Clave para guardar el estado de autenticación
+  private readonly loginUrl = 'http://localhost:8080/api/login'; // URL del backend para login
+  private readonly AUTH_KEY = 'isLoggedIn'; // Clave para guardar el estado de autenticación
 
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private readonly isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  private currentUserSubject = new BehaviorSubject<any>(null);
+  private readonly currentUserSubject = new BehaviorSubject<any>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
   // Recuperar el usuario del localStorage al cargar la aplicación
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private readonly http: HttpClient, private readonly router: Router) {
     const isLoggedIn = this.isBrowser() && this.isLoggedIn();
     const storedUser = this.isBrowser() ? localStorage.getItem('currentUser') : null;
 

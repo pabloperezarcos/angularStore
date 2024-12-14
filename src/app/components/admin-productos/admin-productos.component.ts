@@ -20,7 +20,7 @@ export class AdminProductosComponent implements OnInit {
   searchQuery: string = '';
   loading: boolean = false;
 
-  private productService = inject(ProductService);
+  private readonly productService = inject(ProductService);
 
   ngOnInit(): void {
     this.loadProductos();

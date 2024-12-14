@@ -8,11 +8,6 @@ h2 {
     font-weight: bold;
 }
 
-.card {
-    border: none;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-}
-
 .card-title {
     font-weight: bold;
     font-size: 1.5rem;
@@ -40,6 +35,10 @@ h2 {
 }
 
 .card {
+
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+
     .rounded-circle {
         border: 2px solid #ddd;
         padding: 5px;

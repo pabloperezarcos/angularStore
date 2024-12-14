@@ -45,8 +45,8 @@ export class PerfilComponent implements OnInit {
    * @param usuarioService Servicio para gestionar las operaciones relacionadas con usuarios.
    */
   constructor(
-    private authService: AuthService,
-    private usuarioService: UsuarioService
+    private readonly authService: AuthService,
+    private readonly usuarioService: UsuarioService
   ) { }
 
   /**

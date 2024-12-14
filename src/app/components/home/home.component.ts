@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgIf, NgFor, CurrencyPipe } from '@angular/common';
 import { ProductService } from '../../services/product.service';
 import { Producto } from '../../models/producto.model';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-home',
@@ -15,7 +16,10 @@ export class HomeComponent implements OnInit {
   productos: Producto[] = [];
   loading = true;
 
-  constructor(private productService: ProductService) { }
+  constructor(
+    private readonly productService: ProductService,
+    private readonly router: Router
+  ) { }
 
   ngOnInit() {
     this.loadProductosFromBackend();
@@ -35,4 +39,9 @@ export class HomeComponent implements OnInit {
       complete: () => console.log('Carga de productos completa'),
     });
   }
+
+  navigateToCatalog(): void {
+    this.router.navigate(['/catalogo']);
+  }
+
 }

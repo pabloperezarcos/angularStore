@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { ProductService } from './product.service';
 import { Producto } from '../models/producto.model';
-import { HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+
 
 describe('ProductService', () => {
   let service: ProductService;

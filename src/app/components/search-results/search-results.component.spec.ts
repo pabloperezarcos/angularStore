@@ -3,6 +3,8 @@ import { SearchResultsComponent } from './search-results.component';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { ProductService } from '../../services/product.service';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 import { Producto } from '../../models/producto.model';
 
 describe('SearchResultsComponent', () => {
@@ -12,18 +14,9 @@ describe('SearchResultsComponent', () => {
   let httpMock: HttpTestingController;
 
   const mockProductos: Producto[] = [
-    {
-      id: 1, nombre: 'Producto A', precio: 100,
-      descripcion: ''
-    },
-    {
-      id: 2, nombre: 'Producto B', precio: 200,
-      descripcion: ''
-    },
-    {
-      id: 3, nombre: 'Producto C', precio: 300,
-      descripcion: ''
-    },
+    { id: 1, nombre: 'Producto A', precio: 100, descripcion: '' },
+    { id: 2, nombre: 'Producto B', precio: 200, descripcion: '' },
+    { id: 3, nombre: 'Producto C', precio: 300, descripcion: '' },
   ];
 
   beforeEach(() => {
@@ -33,6 +26,12 @@ describe('SearchResultsComponent', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         ProductService,
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            queryParams: of({ query: 'Producto' }), // Simula el parámetro de consulta
+          },
+        },
       ],
     });
 
@@ -43,7 +42,7 @@ describe('SearchResultsComponent', () => {
   });
 
   afterEach(() => {
-    httpMock.verify();
+    httpMock.verify(); // Verifica que no haya solicitudes pendientes
   });
 
   it('debería crear el componente', () => {
@@ -51,39 +50,31 @@ describe('SearchResultsComponent', () => {
   });
 
   it('debería buscar productos por término', () => {
-    component.searchTerm = 'Producto';
+    // Ejecuta la lógica de búsqueda
     component.searchProductos('Producto');
 
-    const req = httpMock.expectOne('http://localhost:8080/api/productos');
+    const req = httpMock.expectOne('http://localhost:8080/api/productos?query=Producto');
     expect(req.request.method).toBe('GET');
-    req.flush({ _embedded: { productosList: mockProductos } });
 
+    // Simula la respuesta del backend
+    req.flush(mockProductos);
+
+    // Verifica los resultados
     expect(component.productos.length).toBe(3);
     expect(component.productos).toEqual(mockProductos);
     expect(component.loading).toBeFalse();
   });
 
-  it('debería filtrar productos basados en el término de búsqueda', () => {
-    component.searchTerm = 'Producto A';
-    component.searchProductos('Producto A');
-
-    const req = httpMock.expectOne('http://localhost:8080/api/productos');
-    expect(req.request.method).toBe('GET');
-    req.flush({ _embedded: { productosList: mockProductos } });
-
-    expect(component.productos.length).toBe(1);
-    expect(component.productos[0].nombre).toBe('Producto A');
-    expect(component.loading).toBeFalse();
-  });
-
   it('debería manejar errores al buscar productos', () => {
-    component.searchTerm = 'Producto X';
+    // Ejecuta la lógica de búsqueda
     component.searchProductos('Producto X');
 
-    const req = httpMock.expectOne('http://localhost:8080/api/productos');
-    req.error(new ErrorEvent('Network error'));
+    const req = httpMock.expectOne('http://localhost:8080/api/productos?query=Producto X');
+    req.error(new ProgressEvent('error'));
 
+    // Verifica los resultados en caso de error
     expect(component.productos.length).toBe(0);
+    expect(component.errorMessage).toBe('Hubo un error al cargar los resultados de búsqueda.');
     expect(component.loading).toBeFalse();
   });
 });
