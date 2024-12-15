@@ -1,46 +1,104 @@
+<!-- register.component.html -->
 <div class="register-container">
     <div class="register-card">
         <h2 class="register-title">Registrarse</h2>
-        <form (ngSubmit)="onRegister()">
+        <form (ngSubmit)="onRegister()" #userForm="ngForm">
+            <!-- Nombre -->
             <div class="form-group">
                 <label for="nombre">Nombre</label>
-                <input type="text" class="form-control" id="nombre" [(ngModel)]="nombre" name="nombre" required>
+                <input type="text" class="form-control" id="nombre" [(ngModel)]="nombre" name="nombre" required
+                    #nombreModel="ngModel">
+                <div *ngIf="nombreModel.touched && nombreModel.invalid" class="text-danger">
+                    <div *ngIf="nombreModel.errors?.['required']">El nombre es requerido.</div>
+                </div>
             </div>
+
+            <!-- Nombre de usuario -->
             <div class="form-group">
                 <label for="username">Nombre de usuario</label>
-                <input type="text" class="form-control" id="username" [(ngModel)]="username" name="username" required>
+                <input type="text" class="form-control" id="username" [(ngModel)]="username" name="username" required
+                    #usernameModel="ngModel">
+                <div *ngIf="usernameModel.touched && usernameModel.invalid" class="text-danger">
+                    <div *ngIf="usernameModel.errors?.['required']">El nombre de usuario es requerido.</div>
+                </div>
             </div>
+
+            <!-- Email -->
             <div class="form-group">
                 <label for="email">Correo electrónico</label>
-                <input type="email" class="form-control" id="email" [(ngModel)]="email" name="email" required>
+                <input type="email" class="form-control" id="email" [(ngModel)]="email" name="email" required
+                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" #emailModel="ngModel">
+                <div *ngIf="emailModel.touched && emailModel.invalid" class="text-danger">
+                    <div *ngIf="emailModel.errors?.['required']">
+                        El correo electrónico es requerido.</div>
+                    <div *ngIf="emailModel.errors?.['email']">Debe ingresar un correo válido.</div>
+                </div>
+                <div class="text-danger" *ngIf="emailModel.errors?.['pattern']">
+                    El correo electrónico ingresado no tiene un formato válido.
+                </div>
             </div>
+
+            <!-- Contraseña -->
             <div class="form-group position-relative">
                 <label for="password">Contraseña</label>
-                <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password"
-                    required minlength="6" maxlength="8" pattern="^(?=.*[A-Z])(?=.*\d).{6,8}$" #password="ngModel">
+                <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="password"
+                    [(ngModel)]="password" name="password" required minlength="6" maxlength="8"
+                    pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&amp;#]).{6,8}$" #passwordModel="ngModel">
                 <button type="button" class="btn btn-outline-secondary position-absolute end-0 top-0"
                     (click)="togglePasswordVisibility()" title="Mostrar/Ocultar Contraseña">
                     <i class="fa" [ngClass]="{'fa-eye': showPassword, 'fa-eye-slash': !showPassword}"></i>
                 </button>
-                <div *ngIf="password.touched && password.invalid" class="text-danger mt-2">
-                    <div *ngIf="password.errors?.['required']">La contraseña es requerida.</div>
-                    <div *ngIf="password.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</div>
-                    <div *ngIf="password.errors?.['maxlength']">La contraseña no debe exceder los 8 caracteres.</div>
-                    <div *ngIf="password.errors?.['pattern']">La contraseña debe contener al menos una mayúscula y un
-                        número.</div>
+                <div *ngIf="passwordModel.touched && passwordModel.invalid" class="text-danger mt-2">
+                    <div *ngIf="passwordModel.errors?.['required']">La contraseña es requerida.</div>
+                    <div *ngIf="passwordModel.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.
+                    </div>
+                    <div *ngIf="passwordModel.errors?.['maxlength']">La contraseña no debe exceder los 8 caracteres.
+                    </div>
+                    <div *ngIf="passwordModel.errors?.['pattern']">
+                        La contraseña debe contener al menos una mayúscula, un número y un carácter especial.
+                    </div>
                 </div>
             </div>
+
+            <!-- Confirmación de Contraseña -->
+            <div class="form-group">
+                <label for="confirmPassword">Confirmar Contraseña</label>
+                <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="confirmPassword"
+                    [(ngModel)]="confirmPassword" name="confirmPassword" required #confirmPasswordModel="ngModel">
+                <div *ngIf="(confirmPasswordModel.touched && confirmPasswordModel.invalid) || (confirmPassword && confirmPassword !== password)"
+                    class="text-danger">
+                    <div *ngIf="confirmPasswordModel.errors?.['required']">Debe confirmar la contraseña.</div>
+                    <div *ngIf="confirmPassword && confirmPassword !== password">Las contraseñas no coinciden.</div>
+                </div>
+            </div>
+
+            <!-- Fecha de nacimiento -->
             <div class="form-group">
                 <label for="birthdate">Fecha de nacimiento</label>
-                <input type="date" class="form-control" id="birthdate" [(ngModel)]="birthdate" name="birthdate"
-                    required>
+                <input type="date" class="form-control" id="birthdate" [(ngModel)]="birthdate" name="birthdate" required
+                    #birthdateModel="ngModel">
+                <div *ngIf="birthdateModel.touched && birthdateModel.invalid" class="text-danger">
+                    <div *ngIf="birthdateModel.errors?.['required']">La fecha de nacimiento es requerida.</div>
+                </div>
             </div>
+
+            <!-- Dirección -->
             <div class="form-group">
                 <label for="address">Dirección</label>
-                <input type="text" class="form-control" id="address" [(ngModel)]="address" name="address" required>
+                <input type="text" class="form-control" id="address" [(ngModel)]="address" name="address" required
+                    #addressModel="ngModel">
+                <div *ngIf="addressModel.touched && addressModel.invalid" class="text-danger">
+                    <div *ngIf="addressModel.errors?.['required']">La dirección es requerida.</div>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
-            <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+
+            <!-- Botón de envío -->
+            <button type="submit" class="btn btn-primary btn-block" [disabled]="userForm.invalid">
+                Registrarse
+            </button>
         </form>
+
+        <!-- Mensaje de error general -->
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
     </div>
 </div>
