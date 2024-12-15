@@ -11,8 +11,8 @@ describe('AdminProductosComponent', () => {
   let productServiceSpy: jasmine.SpyObj<ProductService>;
 
   const mockProductos: Producto[] = [
-    { id: 1, nombre: 'Producto 1', descripcion: 'Descripción 1', precio: 100, imagenUrl: 'img1.jpg' },
-    { id: 2, nombre: 'Producto 2', descripcion: 'Descripción 2', precio: 200, imagenUrl: 'img2.jpg' },
+    { id: 1, nombre: 'Producto 1', descripcion: 'Descripción 1', precio: 100, imagen: 'img1.jpg' },
+    { id: 2, nombre: 'Producto 2', descripcion: 'Descripción 2', precio: 200, imagen: 'img2.jpg' },
   ];
 
   beforeEach(async () => {
@@ -81,7 +81,7 @@ describe('AdminProductosComponent', () => {
 
   it('debería preparar un nuevo producto para agregar', () => {
     component.crearProducto();
-    expect(component.selectedProduct).toEqual({ id: 0, nombre: '', descripcion: '', precio: 0, imagenUrl: '' });
+    expect(component.selectedProduct).toEqual({ id: 0, nombre: '', descripcion: '', precio: 0, imagen: '' });
     expect(component.isEditing).toBeTrue();
     expect(component.isAdding).toBeTrue();
   });
@@ -94,7 +94,7 @@ describe('AdminProductosComponent', () => {
   });
 
   it('debería crear un nuevo producto', () => {
-    const newProduct: Producto = { id: 0, nombre: 'Nuevo Producto', descripcion: 'Nuevo Desc', precio: 150, imagenUrl: 'img.jpg' };
+    const newProduct: Producto = { id: 0, nombre: 'Nuevo Producto', descripcion: 'Nuevo Desc', precio: 150, imagen: 'img.jpg' };
     component.selectedProduct = newProduct;
     component.isAdding = true;
 
@@ -107,7 +107,7 @@ describe('AdminProductosComponent', () => {
   });
 
   it('debería manejar errores al crear un producto', () => {
-    const newProduct: Producto = { id: 0, nombre: 'Nuevo Producto', descripcion: 'Nuevo Desc', precio: 150, imagenUrl: 'img.jpg' };
+    const newProduct: Producto = { id: 0, nombre: 'Nuevo Producto', descripcion: 'Nuevo Desc', precio: 150, imagen: 'img.jpg' };
     component.selectedProduct = newProduct;
     component.isAdding = true;
 

@@ -69,18 +69,25 @@ describe('AuthService', () => {
   });
 
   it('debería manejar errores al iniciar sesión', (done) => {
-    service.login('testUser', 'wrongPassword').subscribe((result) => {
-      expect(result).toBeFalse(); // El resultado debe ser false en caso de error
-      expect(localStorage.setItem).not.toHaveBeenCalled(); // localStorage no debería ser llamado
-      expect(service.getCurrentUser()).toBeNull(); // El usuario actual debe ser null
-      expect(service.isLoggedIn()).toBeFalse(); // El estado de inicio de sesión debe ser falso
-      done();
+    service.login('testUser', 'wrongPassword').subscribe({
+      next: (result) => {
+        expect(result).toBeFalse(); // Asegúrate de que el resultado sea falso en caso de error
+        expect(localStorage.setItem).not.toHaveBeenCalled(); // localStorage no debería ser llamado
+        expect(service.getCurrentUser()).toBeNull(); // El usuario actual debe ser null
+        expect(service.isLoggedIn()).toBeFalse(); // El estado de inicio de sesión debe ser falso
+        done();
+      },
+      error: (error) => {
+        fail(`La prueba falló inesperadamente: ${error}`);
+        done();
+      }
     });
 
     const req = httpMock.expectOne('http://localhost:8080/api/login');
     expect(req.request.method).toBe('POST');
     req.flush({ message: 'Login fallido' }, { status: 401, statusText: 'Unauthorized' }); // Simular error 401
   });
+
 
 
   it('debería cerrar sesión correctamente', () => {

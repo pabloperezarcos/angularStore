@@ -20,14 +20,14 @@ describe('ProductDetailComponent', () => {
     nombre: 'Producto Test',
     precio: 100,
     descripcion: 'Descripción de prueba',
-    imagenUrl: 'url-de-imagenUrl',
+    imagen: 'url-de-imagen',
     stock: 10,
   };
 
   const mockRelatedProductos: Producto[] = [
-    { id: 2, nombre: 'Producto Relacionado 1', precio: 50, descripcion: '', imagenUrl: '', stock: 5 },
-    { id: 3, nombre: 'Producto Relacionado 2', precio: 75, descripcion: '', imagenUrl: '', stock: 8 },
-    { id: 4, nombre: 'Producto Relacionado 3', precio: 120, descripcion: '', imagenUrl: '', stock: 3 },
+    { id: 2, nombre: 'Producto Relacionado 1', precio: 50, descripcion: '', imagen: '', stock: 5 },
+    { id: 3, nombre: 'Producto Relacionado 2', precio: 75, descripcion: '', imagen: '', stock: 8 },
+    { id: 4, nombre: 'Producto Relacionado 3', precio: 120, descripcion: '', imagen: '', stock: 3 },
   ];
 
   beforeEach(() => {

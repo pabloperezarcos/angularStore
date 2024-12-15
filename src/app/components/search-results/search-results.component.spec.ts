@@ -11,8 +11,8 @@ describe('SearchResultsComponent', () => {
   let productServiceSpy: jasmine.SpyObj<ProductService>;
 
   const mockProductos: Producto[] = [
-    { id: 1, nombre: 'Producto 1', descripcion: 'Descripción 1', precio: 100, imagenUrl: 'img1.jpg' },
-    { id: 2, nombre: 'Producto 2', descripcion: 'Descripción 2', precio: 200, imagenUrl: 'img2.jpg' },
+    { id: 1, nombre: 'Producto 1', descripcion: 'Descripción 1', precio: 100, imagen: 'img1.jpg' },
+    { id: 2, nombre: 'Producto 2', descripcion: 'Descripción 2', precio: 200, imagen: 'img2.jpg' },
   ];
 
   beforeEach(async () => {

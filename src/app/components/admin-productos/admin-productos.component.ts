@@ -126,7 +126,7 @@ export class AdminProductosComponent implements OnInit {
    * Prepara el formulario para agregar un nuevo producto.
    */
   crearProducto(): void {
-    this.selectedProduct = { id: 0, nombre: '', descripcion: '', precio: 0, imagenUrl: '' } as Producto;
+    this.selectedProduct = { id: 0, nombre: '', descripcion: '', precio: 0, imagen: '' } as Producto;
     this.isAdding = true;
     this.isEditing = true;
   }
