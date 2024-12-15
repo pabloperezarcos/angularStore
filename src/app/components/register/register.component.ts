@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { UsuarioService } from '../../services/usuario.service';
 import { Usuario } from '../../models/usuario.model';
 
@@ -17,6 +17,7 @@ export class RegisterComponent {
   nombre: string = '';
   username: string = '';
   email: string = '';
+  confirmPassword: string = '';
   password: string = '';
   birthdate: string = '';
   address: string = '';
@@ -27,6 +28,8 @@ export class RegisterComponent {
 
   /** Indica si la contraseña debe ser visible */
   showPassword: boolean = false;
+
+  @ViewChild('userForm') userForm!: NgForm;
 
   /**
    * Constructor que inyecta el servicio de usuario y enrutamiento.
