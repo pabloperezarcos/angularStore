@@ -20,9 +20,9 @@ export class NavbarComponent implements OnInit {
   currentUser: any = null;
 
   constructor(
-    private router: Router,
-    private carritoService: CarritoService,
-    private authService: AuthService
+    private readonly router: Router,
+    private readonly carritoService: CarritoService,
+    private readonly authService: AuthService
   ) { }
 
   ngOnInit(): void {

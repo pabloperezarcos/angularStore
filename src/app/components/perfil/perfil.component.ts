@@ -45,8 +45,8 @@ export class PerfilComponent implements OnInit {
    * @param usuarioService Servicio para gestionar las operaciones relacionadas con usuarios.
    */
   constructor(
-    private authService: AuthService,
-    private usuarioService: UsuarioService
+    private readonly authService: AuthService,
+    private readonly usuarioService: UsuarioService
   ) { }
 
   /**
@@ -76,29 +76,36 @@ export class PerfilComponent implements OnInit {
     this.editMode = !this.editMode;
   }
 
-  getFormattedDate(dateString: string): string {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'long', year: 'numeric' };
-    return date.toLocaleDateString('es-CL', options);
-  }
+  /*   getFormattedDate(dateString: string): string {
+      const date = new Date(dateString);
+      const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'long', year: 'numeric' };
+      return date.toLocaleDateString('es-CL', options);
+    } */
 
+  getFormattedDate(date: string): string {
+    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC' };
+    return new Intl.DateTimeFormat('es-ES', options).format(new Date(date));
+  }
 
   /**
    * Guarda los cambios realizados en el perfil de usuario.
    */
   saveProfile(): void {
-    if (this.user) {
-      this.loading = true;
-      this.usuarioService.actualizarUsuario(this.user.id, this.user).subscribe({
-        next: () => {
-          this.editMode = false;
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error('Error al guardar el perfil:', err);
-          this.loading = false;
-        }
-      });
-    }
+    if (!this.user) return;
+
+    this.loading = true;
+    this.usuarioService.actualizarUsuario(this.user.id, this.user).subscribe({
+      next: (usuarioActualizado) => {
+        this.user = usuarioActualizado;
+        this.editMode = false;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error al guardar el perfil:', err);
+        this.editMode = true; // Asegura que el modo de edición permanece activado
+        this.loading = false;
+      },
+    });
   }
+
 }

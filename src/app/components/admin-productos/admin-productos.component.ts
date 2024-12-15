@@ -20,7 +20,7 @@ export class AdminProductosComponent implements OnInit {
   searchQuery: string = '';
   loading: boolean = false;
 
-  private productService = inject(ProductService);
+  private readonly productService = inject(ProductService);
 
   ngOnInit(): void {
     this.loadProductos();
@@ -74,19 +74,30 @@ export class AdminProductosComponent implements OnInit {
   actualizarProducto(): void {
     if (this.isAdding && this.selectedProduct) {
       this.productService.crearProducto(this.selectedProduct).subscribe({
-        next: () => this.loadProductos(),
-        error: (err) => console.error('Error agregando producto:', err)
+        next: () => {
+          this.loadProductos();
+          this.cancelEdit();
+        },
+        error: (err) => {
+          console.error('Error creando producto:', err);
+          this.isAdding = true; // Mantener activo el estado de agregar
+          this.isEditing = true; // Mantener activo el modo de edición
+        },
       });
     } else if (this.selectedProduct?.id !== undefined) {
       this.productService.actualizarProducto(this.selectedProduct.id, this.selectedProduct).subscribe({
-        next: () => this.loadProductos(),
-        error: (err) => console.error('Error actualizando producto:', err)
+        next: () => {
+          this.loadProductos();
+          this.cancelEdit();
+        },
+        error: (err) => {
+          console.error('Error actualizando producto:', err);
+          this.isEditing = true; // Mantener activo el modo de edición
+        },
       });
-    } else {
-      console.error('El producto no tiene un ID válido para actualizar.');
     }
-    this.cancelEdit();
   }
+
 
 
   /**

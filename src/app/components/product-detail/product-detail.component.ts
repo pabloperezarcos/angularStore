@@ -35,9 +35,9 @@ export class ProductDetailComponent implements OnInit {
    * @param carritoService Servicio para gestionar el carrito de compras.
    */
   constructor(
-    private route: ActivatedRoute,
-    private productService: ProductService,
-    private carritoService: CarritoService
+    private readonly route: ActivatedRoute,
+    private readonly productService: ProductService,
+    private readonly carritoService: CarritoService
   ) { }
 
   

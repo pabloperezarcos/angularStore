@@ -15,25 +15,16 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, ReactiveFormsModule]
 })
 export class ForgotPasswordComponent implements OnInit {
-  /** FormGroup para manejar el formulario de restablecimiento de contraseña */
-  resetForm: FormGroup;
-
-  /** Mensaje para mostrar al usuario */
+  resetForm!: FormGroup;
   message: string = '';
 
-  /**
-   * Constructor del componente que inicializa el formulario con validaciones.
-   * @param formBuilder Constructor de formularios reactivos para definir el formulario.
-   * @param router Servicio de enrutamiento para la navegación.
-   */
-  constructor(private formBuilder: FormBuilder, private router: Router) {
+  constructor(private readonly formBuilder: FormBuilder, private readonly router: Router) { }
+
+  ngOnInit(): void {
     this.resetForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]]
     });
   }
-
-  /** Inicialización del componente. */
-  ngOnInit(): void { }
 
   /**
    * Getter para facilitar el acceso a los controles del formulario.

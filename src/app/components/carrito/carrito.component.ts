@@ -42,7 +42,7 @@ export class CarritoComponent implements OnInit {
    * @param carritoService Servicio para gestionar el carrito de compras.
    * @param router Servicio de enrutamiento de Angular.
    */
-  constructor(private carritoService: CarritoService, private router: Router) { }
+  constructor(private readonly carritoService: CarritoService, private readonly router: Router) { }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.

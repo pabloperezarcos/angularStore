@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
 
@@ -7,9 +7,9 @@ import { Usuario } from '../models/usuario.model';
   providedIn: 'root'
 })
 export class UsuarioService {
-  private apiUrl = 'http://localhost:8080/api/usuarios'; // URL base del backend
+  private readonly apiUrl = 'http://localhost:8080/api/usuarios'; // URL base del backend
 
-  constructor(private http: HttpClient) { }
+  constructor(private readonly http: HttpClient) { }
 
   /**
    * Obtiene todos los usuarios del backend.

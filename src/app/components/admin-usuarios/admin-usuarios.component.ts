@@ -21,7 +21,7 @@ export class AdminUsuariosComponent implements OnInit {
   passwordFieldType: string = 'password';
   loading: boolean = false;
 
-  constructor(private usuarioService: UsuarioService) { }
+  constructor(private readonly usuarioService: UsuarioService) { }
 
   ngOnInit(): void {
     this.loadUsuarios();
@@ -82,7 +82,11 @@ export class AdminUsuariosComponent implements OnInit {
           this.loadUsuarios();
           this.cancelEdit();
         },
-        error: (err) => console.error('Error creando usuario:', err)
+        error: (err) => {
+          console.error('Error creando usuario:', err);
+          this.isAdding = true; // Mantener activo el modo de adición
+          this.isEditing = true;
+        }
       });
     } else if (this.selectedUser?.id !== undefined) {
       this.usuarioService.actualizarUsuario(this.selectedUser.id, this.selectedUser).subscribe({
@@ -90,10 +94,14 @@ export class AdminUsuariosComponent implements OnInit {
           this.loadUsuarios();
           this.cancelEdit();
         },
-        error: (err) => console.error('Error actualizando usuario:', err)
+        error: (err) => {
+          console.error('Error actualizando usuario:', err);
+          this.isEditing = true; // Mantener activo el modo de edición
+        }
       });
     }
   }
+
 
   /**
    * Elimina un usuario.

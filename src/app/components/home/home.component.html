@@ -5,15 +5,16 @@
     <p class="lead">Los mejores productos al mejor precio.</p>
     <hr class="my-4">
     <p>Explora nuestras ofertas y productos destacados.</p>
-    <a class="btn btn-primary btn-lg pulse-on-hover" routerLink="/catalogo" role="button">Ver Todos los Productos</a>
+    <button class="btn btn-primary btn-lg pulse-on-hover" (click)="navigateToCatalog()">Ver Todos los Productos</button>
 </div>
+
 <br>
 <div *ngIf="loading" class="text-center">Cargando productos...</div>
 <div class="container" *ngIf="!loading">
     <div class="row">
         <div class="col-lg-4 col-md-6 mb-4" *ngFor="let product of productos">
             <div class="card lift-on-hover">
-                <img [src]="product.imagen" class="card-img-top" alt="{{ product.nombre }}">
+                <img [src]="product.imagenUrl" class="card-img-top" alt="{{ product.nombre }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ product.nombre }}</h5>
                     <p class="card-text text-truncate">{{ product.descripcion }}</p>

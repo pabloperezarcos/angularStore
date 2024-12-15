@@ -16,11 +16,11 @@ interface CarritoItem {
 })
 export class CarritoService {
   private carritoItems: CarritoItem[] = [];
-  private carritoSubject = new BehaviorSubject<CarritoItem[]>(this.carritoItems);
+  private readonly carritoSubject = new BehaviorSubject<CarritoItem[]>(this.carritoItems);
   carritoActualizado = this.carritoSubject.asObservable();
   private purchasedItems: CarritoItem[] = [];
 
-  constructor(private productService: ProductService) {
+  constructor(private readonly productService: ProductService) {
     this.loadCarrito();
   }
 
@@ -58,15 +58,16 @@ export class CarritoService {
    */
   syncCarritoWithBackend(): void {
     this.carritoItems.forEach((item) => {
-      this.productService.getProductoById(item.producto.id!).subscribe(
-        (productoActualizado) => {
+      this.productService.getProductoById(item.producto.id).subscribe({
+        next: (productoActualizado) => {
           item.producto = productoActualizado;
           this.saveCarrito();
         },
-        (error) => {
+        error: (error) => {
           console.error('Error sincronizando producto:', error);
         }
-      );
+      });
+
     });
   }
 
